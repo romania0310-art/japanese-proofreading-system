@@ -228,4 +228,5 @@ app.listen(PORT, '0.0.0.0', () => {
   console.log(`📍 URL: http://localhost:${PORT}`);
   console.log(`📋 API: /api/health, /api/parse, /api/proofread, /api/generate-docx (DOCX/XLSX対応)`);
   console.log(`⏰ 起動時刻: ${new Date().toLocaleString('ja-JP')}`);
+  console.log(`🌍 環境: ${process.env.NODE_ENV || 'development'}`);
 });
