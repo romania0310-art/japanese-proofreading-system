@@ -15,6 +15,7 @@ class JapaneseProofreadingSystem {
         const uploadArea = document.getElementById('upload-area');
         const fileInput = document.getElementById('file-input');
         const processBtn = document.getElementById('process-btn');
+        const clearFileBtn = document.getElementById('clear-file-btn');
         const copyTextBtn = document.getElementById('copy-text-btn');
         const downloadDocxBtn = document.getElementById('download-docx-btn');
 
@@ -26,12 +27,15 @@ class JapaneseProofreadingSystem {
 
         // 処理実行
         processBtn.addEventListener('click', this.processFile.bind(this));
+        
+        // ファイル削除
+        clearFileBtn.addEventListener('click', this.clearFile.bind(this));
 
         // コピー機能
         copyTextBtn.addEventListener('click', this.copyToClipboard.bind(this));
         
-        // DOCXダウンロード機能
-        downloadDocxBtn.addEventListener('click', this.downloadDocx.bind(this));
+        // ファイルダウンロード機能
+        downloadDocxBtn.addEventListener('click', this.downloadFile.bind(this));
     }
 
     async checkApiStatus() {
@@ -103,6 +107,18 @@ class JapaneseProofreadingSystem {
 
         this.currentFile = file;
         this.showFileInfo(file);
+    }
+
+    clearFile() {
+        this.currentFile = null;
+        this.currentResult = null;
+        
+        // UI要素をリセット
+        document.getElementById('file-info').classList.add('hidden');
+        document.getElementById('file-input').value = '';
+        this.hideResults();
+        
+        console.log('ファイルをクリアしました');
     }
 
     showFileInfo(file) {
@@ -195,7 +211,7 @@ class JapaneseProofreadingSystem {
     showResults(parseResult, proofreadResult) {
         const noResult = document.getElementById('no-result');
         const statsArea = document.getElementById('correction-stats');
-        const textArea = document.getElementById('corrected-text-area');
+        const downloadSection = document.getElementById('download-section');
         const changesArea = document.getElementById('changes-list-area');
 
         // 結果を保存（ダウンロード用）
@@ -212,9 +228,8 @@ class JapaneseProofreadingSystem {
         document.getElementById('tables-count').textContent = parseResult.metadata?.tables || 0;
         statsArea.classList.remove('hidden');
 
-        // 校正後テキスト
-        document.getElementById('corrected-text').textContent = proofreadResult.correctedText;
-        textArea.classList.remove('hidden');
+        // ダウンロードセクションを表示
+        downloadSection.classList.remove('hidden');
 
         // 変更一覧
         if (proofreadResult.changes.length > 0) {
@@ -258,7 +273,12 @@ class JapaneseProofreadingSystem {
     }
 
     async copyToClipboard() {
-        const correctedText = document.getElementById('corrected-text').textContent;
+        if (!this.currentResult) {
+            alert('コピー可能なテキストがありません');
+            return;
+        }
+        
+        const correctedText = this.currentResult.proofreadResult.correctedText;
         
         try {
             await navigator.clipboard.writeText(correctedText);
@@ -298,7 +318,7 @@ class JapaneseProofreadingSystem {
     hideResults() {
         document.getElementById('no-result').classList.remove('hidden');
         document.getElementById('correction-stats').classList.add('hidden');
-        document.getElementById('corrected-text-area').classList.add('hidden');
+        document.getElementById('download-section').classList.add('hidden');
         document.getElementById('changes-list-area').classList.add('hidden');
     }
 
@@ -306,7 +326,7 @@ class JapaneseProofreadingSystem {
         alert(`エラー: ${message}`);
     }
 
-    async downloadDocx() {
+    async downloadFile() {
         if (!this.currentFile || !this.currentResult) {
             alert('ダウンロード可能なファイルがありません');
             return;
@@ -321,7 +341,10 @@ class JapaneseProofreadingSystem {
 
             const button = document.getElementById('download-docx-btn');
             const originalText = button.innerHTML;
-            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>生成中...';
+            const fileExtension = this.currentFile.name.toLowerCase().split('.').pop();
+            const isOfficeFile = ['docx', 'xlsx'].includes(fileExtension);
+            
+            button.innerHTML = `<i class="fas fa-spinner fa-spin mr-2"></i>${isOfficeFile ? fileExtension.toUpperCase() : 'DOCX'}生成中...`;
             button.disabled = true;
 
             const response = await fetch(`${this.apiBaseUrl}/api/generate-docx`, {
@@ -354,7 +377,7 @@ class JapaneseProofreadingSystem {
             document.body.removeChild(a);
             window.URL.revokeObjectURL(url);
 
-            // ボタンを元に戻す
+            // ボタンを成功状態に
             button.innerHTML = '<i class="fas fa-check mr-2"></i>ダウンロード完了！';
             button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
             button.classList.add('bg-green-600', 'hover:bg-green-700');
@@ -371,7 +394,7 @@ class JapaneseProofreadingSystem {
             alert(`ダウンロードエラー: ${error.message}`);
             
             const button = document.getElementById('download-docx-btn');
-            button.innerHTML = '<i class="fas fa-download mr-2"></i>DOCXダウンロード';
+            button.innerHTML = '<i class="fas fa-download mr-2"></i>元の形式でダウンロード (DOCX/XLSX)';
             button.disabled = false;
         }
     }

@@ -6,7 +6,7 @@ import path from 'path';
 import { fileURLToPath } from 'url';
 import { DocumentParser } from './lib/documentParser.js';
 import { ProofreadingEngine } from './lib/proofreadingEngine.js';
-import { DOCXFormatter } from './lib/docxFormatter.js';
+import { DocumentFormatter } from './lib/docxFormatter.js';
 
 const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.dirname(__filename);
@@ -45,7 +45,7 @@ const upload = multer({
 // インスタンス初期化
 const documentParser = new DocumentParser();
 const proofreadingEngine = new ProofreadingEngine();
-const docxFormatter = new DOCXFormatter();
+const documentFormatter = new DocumentFormatter();
 
 // メインページ
 app.get('/', (req, res) => {
@@ -159,18 +159,19 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
     let docxBuffer;
     const extension = req.file.originalname.toLowerCase().split('.').pop();
     
-    if (extension === 'docx') {
-      // DOCXの場合：元の構造を保持して生成
+    if (extension === 'docx' || extension === 'xlsx') {
+      // DOCX/XLSXの場合：元の構造を保持して生成
       const parsedChanges = changes ? JSON.parse(changes) : [];
-      docxBuffer = await docxFormatter.generateCorrectedDocx(
+      docxBuffer = await documentFormatter.generateCorrectedFile(
         req.file.buffer,
         originalText || '',
         correctedText,
-        parsedChanges
+        parsedChanges,
+        extension
       );
     } else {
       // その他の場合：新規DOCXとして生成
-      docxBuffer = await docxFormatter.generateSimpleDocx(
+      docxBuffer = await documentFormatter.generateSimpleDocx(
         correctedText,
         req.file.originalname.replace(/\.[^.]+$/, '_corrected.docx')
       );
@@ -178,7 +179,8 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
 
     // ファイル名を生成
     const baseName = req.file.originalname.replace(/\.[^.]+$/, '');
-    const outputFileName = `${baseName}_校正済み.docx`;
+    const outputExtension = (extension === 'docx' || extension === 'xlsx') ? extension : 'docx';
+    const outputFileName = `${baseName}_校正済み.${outputExtension}`;
 
     console.log('DOCX生成完了:', {
       outputFileName,
@@ -186,7 +188,10 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
     });
 
     // レスポンスヘッダーを設定
-    res.setHeader('Content-Type', 'application/vnd.openxmlformats-officedocument.wordprocessingml.document');
+    const mimeType = extension === 'xlsx' 
+      ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+      : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
+    res.setHeader('Content-Type', mimeType);
     res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(outputFileName)}`);
     res.setHeader('Content-Length', docxBuffer.length);
     
@@ -196,7 +201,7 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
     console.error('DOCX生成エラー:', error);
     res.status(500).json({
       success: false,
-      error: 'DOCX生成中にエラーが発生しました: ' + error.message
+      error: 'ファイル生成中にエラーが発生しました: ' + error.message
     });
   }
 });
@@ -221,6 +226,6 @@ app.use((error, req, res, next) => {
 app.listen(PORT, '0.0.0.0', () => {
   console.log(`🚀 日本語校正システム起動`);
   console.log(`📍 URL: http://localhost:${PORT}`);
-  console.log(`📋 API: /api/health, /api/parse, /api/proofread, /api/generate-docx`);
+  console.log(`📋 API: /api/health, /api/parse, /api/proofread, /api/generate-docx (DOCX/XLSX対応)`);
   console.log(`⏰ 起動時刻: ${new Date().toLocaleString('ja-JP')}`);
 });

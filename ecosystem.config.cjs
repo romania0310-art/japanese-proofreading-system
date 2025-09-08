@@ -5,7 +5,7 @@ module.exports = {
       script: 'server.js',
       env: {
         NODE_ENV: 'development',
-        PORT: 3001
+        PORT: 3000
       },
       watch: ['server.js', 'lib/', 'data/'],
       watch_delay: 1000,

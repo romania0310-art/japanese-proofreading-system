@@ -43,9 +43,14 @@
                     <div class="bg-blue-50 border border-blue-200 rounded-lg p-4">
                         <h3 class="font-medium text-blue-800 mb-2">選択されたファイル</h3>
                         <p id="file-details" class="text-sm text-blue-700"></p>
-                        <button id="process-btn" class="mt-3 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
-                            <i class="fas fa-cogs mr-2"></i>解析・校正実行
-                        </button>
+                        <div class="mt-3 flex gap-2">
+                            <button id="process-btn" class="flex-1 bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-cogs mr-2"></i>解析・校正実行
+                            </button>
+                            <button id="clear-file-btn" class="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors">
+                                <i class="fas fa-times mr-1"></i>削除
+                            </button>
+                        </div>
                     </div>
                 </div>
 
@@ -94,18 +99,15 @@
                         </div>
                     </div>
 
-                    <!-- 校正テキスト表示 -->
-                    <div id="corrected-text-area" class="hidden">
-                        <h3 class="font-medium text-gray-800 mb-3">推敲後の文章</h3>
-                        <div id="corrected-text" class="bg-gray-50 border rounded-lg p-4 whitespace-pre-wrap font-mono text-sm max-h-96 overflow-y-auto"></div>
-                        
-                        <!-- ダウンロードボタン -->
-                        <div id="download-section" class="mt-4 space-y-2">
+                    <!-- ダウンロードボタン -->
+                    <div id="download-section" class="hidden mt-6">
+                        <h3 class="font-medium text-gray-800 mb-3">校正結果のダウンロード</h3>
+                        <div class="space-y-2">
+                            <button id="download-docx-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
+                                <i class="fas fa-download mr-2"></i>元の形式でダウンロード (DOCX/XLSX)
+                            </button>
                             <button id="copy-text-btn" class="w-full bg-gray-600 text-white px-4 py-2 rounded hover:bg-gray-700 transition-colors">
                                 <i class="fas fa-copy mr-2"></i>テキストをコピー
-                            </button>
-                            <button id="download-docx-btn" class="w-full bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 transition-colors">
-                                <i class="fas fa-download mr-2"></i>DOCXダウンロード
                             </button>
                         </div>
                     </div>
