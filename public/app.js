@@ -2,6 +2,7 @@ class JapaneseProofreadingSystem {
     constructor() {
         this.apiBaseUrl = window.location.origin;
         this.currentFile = null;
+        this.currentResult = null; // 校正結果を保持
         this.init();
     }
 
@@ -15,6 +16,7 @@ class JapaneseProofreadingSystem {
         const fileInput = document.getElementById('file-input');
         const processBtn = document.getElementById('process-btn');
         const copyTextBtn = document.getElementById('copy-text-btn');
+        const downloadDocxBtn = document.getElementById('download-docx-btn');
 
         // ファイルアップロード関連
         uploadArea.addEventListener('click', () => fileInput.click());
@@ -27,6 +29,9 @@ class JapaneseProofreadingSystem {
 
         // コピー機能
         copyTextBtn.addEventListener('click', this.copyToClipboard.bind(this));
+        
+        // DOCXダウンロード機能
+        downloadDocxBtn.addEventListener('click', this.downloadDocx.bind(this));
     }
 
     async checkApiStatus() {
@@ -193,6 +198,12 @@ class JapaneseProofreadingSystem {
         const textArea = document.getElementById('corrected-text-area');
         const changesArea = document.getElementById('changes-list-area');
 
+        // 結果を保存（ダウンロード用）
+        this.currentResult = {
+            parseResult,
+            proofreadResult
+        };
+
         noResult.classList.add('hidden');
         
         // 統計情報
@@ -293,6 +304,76 @@ class JapaneseProofreadingSystem {
 
     showError(message) {
         alert(`エラー: ${message}`);
+    }
+
+    async downloadDocx() {
+        if (!this.currentFile || !this.currentResult) {
+            alert('ダウンロード可能なファイルがありません');
+            return;
+        }
+
+        try {
+            const formData = new FormData();
+            formData.append('file', this.currentFile);
+            formData.append('correctedText', this.currentResult.proofreadResult.correctedText);
+            formData.append('originalText', this.currentResult.parseResult.text);
+            formData.append('changes', JSON.stringify(this.currentResult.proofreadResult.changes));
+
+            const button = document.getElementById('download-docx-btn');
+            const originalText = button.innerHTML;
+            button.innerHTML = '<i class="fas fa-spinner fa-spin mr-2"></i>生成中...';
+            button.disabled = true;
+
+            const response = await fetch(`${this.apiBaseUrl}/api/generate-docx`, {
+                method: 'POST',
+                body: formData
+            });
+
+            if (!response.ok) {
+                throw new Error('ダウンロードに失敗しました');
+            }
+
+            // ファイル名を取得
+            const contentDisposition = response.headers.get('Content-Disposition');
+            let fileName = 'corrected_document.docx';
+            if (contentDisposition) {
+                const match = contentDisposition.match(/filename\*?=['"]?([^;'"]*)/);
+                if (match) {
+                    fileName = decodeURIComponent(match[1]);
+                }
+            }
+
+            // ファイルをダウンロード
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = fileName;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+
+            // ボタンを元に戻す
+            button.innerHTML = '<i class="fas fa-check mr-2"></i>ダウンロード完了！';
+            button.classList.remove('bg-blue-600', 'hover:bg-blue-700');
+            button.classList.add('bg-green-600', 'hover:bg-green-700');
+            
+            setTimeout(() => {
+                button.innerHTML = originalText;
+                button.classList.remove('bg-green-600', 'hover:bg-green-700');
+                button.classList.add('bg-blue-600', 'hover:bg-blue-700');
+                button.disabled = false;
+            }, 3000);
+
+        } catch (error) {
+            console.error('DOCX download error:', error);
+            alert(`ダウンロードエラー: ${error.message}`);
+            
+            const button = document.getElementById('download-docx-btn');
+            button.innerHTML = '<i class="fas fa-download mr-2"></i>DOCXダウンロード';
+            button.disabled = false;
+        }
     }
 
     delay(ms) {
