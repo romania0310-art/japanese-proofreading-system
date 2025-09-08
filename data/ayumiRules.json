@@ -1,0 +1,1101 @@
+{
+  "rules": [
+    {
+      "category": "あ行",
+      "correct": "挨拶",
+      "incorrect": ["あいさつ"],
+      "reading": "あいさつ"
+    },
+    {
+      "category": "あ行", 
+      "correct": "（成果）を上げる",
+      "incorrect": ["（成果）をあげる"],
+      "reading": "あげる"
+    },
+    {
+      "category": "あ行",
+      "correct": "（～に）当たって",
+      "incorrect": ["（～に）あたって"],
+      "reading": "あたって"
+    },
+    {
+      "category": "あ行",
+      "correct": "表す",
+      "incorrect": ["あらわす"],
+      "reading": "あらわす"
+    },
+    {
+      "category": "あ行",
+      "correct": "在り方",
+      "incorrect": ["あり方"],
+      "reading": "ありかた"
+    },
+    {
+      "category": "あ行",
+      "correct": "有り難い",
+      "incorrect": ["ありがたい"],
+      "reading": "ありがたい"
+    },
+    {
+      "category": "い行",
+      "correct": "（～と）いえる",
+      "incorrect": ["（～と）言える"],
+      "reading": "いえる"
+    },
+    {
+      "category": "い行",
+      "correct": "生かす",
+      "incorrect": ["いかす"],
+      "reading": "いかす"
+    },
+    {
+      "category": "い行",
+      "correct": "生き生きと",
+      "incorrect": ["いきいきと"],
+      "reading": "いきいき"
+    },
+    {
+      "category": "い行",
+      "correct": "意気込み",
+      "incorrect": ["意気ごみ"],
+      "reading": "いきごみ"
+    },
+    {
+      "category": "い行",
+      "correct": "（場所に）行く",
+      "incorrect": ["（場所に）いく"],
+      "reading": "いく"
+    },
+    {
+      "category": "い行",
+      "correct": "いくつか",
+      "incorrect": ["幾つか"],
+      "reading": "いくつか"
+    },
+    {
+      "category": "い行",
+      "correct": "いたします",
+      "incorrect": ["致します"],
+      "reading": "いたします"
+    },
+    {
+      "category": "い行",
+      "correct": "（～して）いただく",
+      "incorrect": ["（～して）頂く"],
+      "reading": "いただく"
+    },
+    {
+      "category": "い行",
+      "correct": "位置付ける",
+      "incorrect": ["位置づける"],
+      "reading": "いちづける"
+    },
+    {
+      "category": "い行",
+      "correct": "一緒に",
+      "incorrect": ["いっしょに"],
+      "reading": "いっしょに"
+    },
+    {
+      "category": "い行",
+      "correct": "いちばん",
+      "incorrect": ["一番"],
+      "reading": "いちばん"
+    },
+    {
+      "category": "い行",
+      "correct": "いろいろ",
+      "incorrect": ["色々"],
+      "reading": "いろいろ"
+    },
+    {
+      "category": "う行",
+      "correct": "（～の）上で",
+      "incorrect": ["（～の）うえで"],
+      "reading": "うえで"
+    },
+    {
+      "category": "う行",
+      "correct": "受け止める",
+      "incorrect": ["受けとめる"],
+      "reading": "うけとめる"
+    },
+    {
+      "category": "う行",
+      "correct": "促す",
+      "incorrect": ["うながす"],
+      "reading": "うながす"
+    },
+    {
+      "category": "う行",
+      "correct": "うまい",
+      "incorrect": ["上手い", "巧い"],
+      "reading": "うまい"
+    },
+    {
+      "category": "う行",
+      "correct": "生み出す",
+      "incorrect": ["生みだす"],
+      "reading": "うみだす"
+    },
+    {
+      "category": "え行",
+      "correct": "（協力を）得る",
+      "incorrect": ["（協力を）える"],
+      "reading": "える"
+    },
+    {
+      "category": "お行",
+      "correct": "大いに",
+      "incorrect": ["おおいに"],
+      "reading": "おおいに"
+    },
+    {
+      "category": "お行",
+      "correct": "おおむね",
+      "incorrect": ["概ね"],
+      "reading": "おおむね"
+    },
+    {
+      "category": "お行",
+      "correct": "補う",
+      "incorrect": ["おぎなう"],
+      "reading": "おぎなう"
+    },
+    {
+      "category": "お行",
+      "correct": "おそらく",
+      "incorrect": ["恐らく"],
+      "reading": "おそらく"
+    },
+    {
+      "category": "お行",
+      "correct": "落ち着き",
+      "incorrect": ["おちつき"],
+      "reading": "おちつき"
+    },
+    {
+      "category": "お行",
+      "correct": "高齢者",
+      "incorrect": ["お年寄り", "お年より"],
+      "reading": "こうれいしゃ"
+    },
+    {
+      "category": "お行",
+      "correct": "おのずから",
+      "incorrect": ["自ずから"],
+      "reading": "おのずから"
+    },
+    {
+      "category": "お行",
+      "correct": "おもしろい",
+      "incorrect": ["面白い"],
+      "reading": "おもしろい"
+    },
+    {
+      "category": "お行",
+      "correct": "及び",
+      "incorrect": ["および"],
+      "reading": "およびに"
+    },
+    {
+      "category": "か行",
+      "correct": "係",
+      "incorrect": ["係り"],
+      "reading": "かかり"
+    },
+    {
+      "category": "か行",
+      "correct": "関わる",
+      "incorrect": ["かかわる"],
+      "reading": "かかわる"
+    },
+    {
+      "category": "か行",
+      "correct": "（絵を）描く",
+      "incorrect": ["（絵を）かく", "（絵を）書く", "絵を書く"],
+      "reading": "かく"
+    },
+    {
+      "category": "か行",
+      "correct": "数える",
+      "incorrect": ["かぞえる"],
+      "reading": "かぞえる"
+    },
+    {
+      "category": "か行",
+      "correct": "片付ける",
+      "incorrect": ["片づける"],
+      "reading": "かたづける"
+    },
+    {
+      "category": "か行",
+      "correct": "偏り",
+      "incorrect": ["かたより"],
+      "reading": "かたより"
+    },
+    {
+      "category": "か行",
+      "correct": "価値付ける",
+      "incorrect": ["価値づける"],
+      "reading": "かちづける"
+    },
+    {
+      "category": "か行",
+      "correct": "かなう",
+      "incorrect": ["叶う"],
+      "reading": "かなう"
+    },
+    {
+      "category": "か行",
+      "correct": "要",
+      "incorrect": ["かなめ"],
+      "reading": "かなめ"
+    },
+    {
+      "category": "か行",
+      "correct": "（心の）通った",
+      "incorrect": ["（心の）かよった"],
+      "reading": "かよった"
+    },
+    {
+      "category": "か行",
+      "correct": "頑張る",
+      "incorrect": ["がんばる"],
+      "reading": "がんばる"
+    },
+    {
+      "category": "き行",
+      "correct": "気配り",
+      "incorrect": ["気くばり"],
+      "reading": "きくばり"
+    },
+    {
+      "category": "き行",
+      "correct": "気持ち",
+      "incorrect": ["気もち"],
+      "reading": "きもち"
+    },
+    {
+      "category": "き行",
+      "correct": "極めて",
+      "incorrect": ["きわめて"],
+      "reading": "きわめて"
+    },
+    {
+      "category": "き行",
+      "correct": "気を付ける",
+      "incorrect": ["気をつける"],
+      "reading": "きをつける"
+    },
+    {
+      "category": "き行",
+      "correct": "きれい",
+      "incorrect": ["綺麗"],
+      "reading": "きれい"
+    },
+    {
+      "category": "く行",
+      "correct": "（～して）ください",
+      "incorrect": ["（～して）下さい"],
+      "reading": "ください"
+    },
+    {
+      "category": "く行",
+      "correct": "暮らし",
+      "incorrect": ["くらし"],
+      "reading": "くらし"
+    },
+    {
+      "category": "く行",
+      "correct": "繰り返す",
+      "incorrect": ["繰返す"],
+      "reading": "くりかえす"
+    },
+    {
+      "category": "こ行",
+      "correct": "語彙",
+      "incorrect": ["語い"],
+      "reading": "ごい"
+    },
+    {
+      "category": "こ行",
+      "correct": "声掛け",
+      "incorrect": ["声かけ"],
+      "reading": "こえかけ"
+    },
+    {
+      "category": "こ行",
+      "correct": "心掛ける",
+      "incorrect": ["心がける"],
+      "reading": "こころがける"
+    },
+    {
+      "category": "こ行",
+      "correct": "答え",
+      "incorrect": ["こたえ"],
+      "reading": "こたえ"
+    },
+    {
+      "category": "こ行",
+      "correct": "（～に）こたえる",
+      "incorrect": ["（～に）応える"],
+      "reading": "こたえる"
+    },
+    {
+      "category": "こ行",
+      "correct": "（～する）こと",
+      "incorrect": ["（～する）事"],
+      "reading": "こと"
+    },
+    {
+      "category": "こ行",
+      "correct": "（班）ごと",
+      "incorrect": ["（班）事"],
+      "reading": "ごと"
+    },
+    {
+      "category": "こ行",
+      "correct": "言葉",
+      "incorrect": ["ことば"],
+      "reading": "ことば"
+    },
+    {
+      "category": "こ行",
+      "correct": "言葉遣い",
+      "incorrect": ["言葉づかい"],
+      "reading": "ことばづかい"
+    },
+    {
+      "category": "こ行",
+      "correct": "子ども",
+      "incorrect": ["子供"],
+      "reading": "こども"
+    },
+    {
+      "category": "こ行",
+      "correct": "子どもたち",
+      "incorrect": ["子ども達", "子どもたち", "子供たち"],
+      "reading": "こどもたち"
+    },
+    {
+      "category": "さ行",
+      "correct": "様々",
+      "incorrect": ["さまざま"],
+      "reading": "さまざま"
+    },
+    {
+      "category": "さ行",
+      "correct": "更に（検討する）",
+      "incorrect": ["さらに（検討する）"],
+      "reading": "さらに",
+      "note": "副詞の場合"
+    },
+    {
+      "category": "さ行",
+      "correct": "さらに、",
+      "incorrect": ["更に、"],
+      "reading": "さらに",
+      "note": "接続詞の場合"
+    },
+    {
+      "category": "し行",
+      "correct": "仕方",
+      "incorrect": ["しかた"],
+      "reading": "しかた"
+    },
+    {
+      "category": "し行",
+      "correct": "仕組み",
+      "incorrect": ["しくみ"],
+      "reading": "しくみ"
+    },
+    {
+      "category": "し行",
+      "correct": "したがって",
+      "incorrect": ["従って"],
+      "reading": "したがって"
+    },
+    {
+      "category": "し行",
+      "correct": "十分",
+      "incorrect": ["充分"],
+      "reading": "じゅうぶん"
+    },
+    {
+      "category": "し行",
+      "correct": "状況",
+      "incorrect": ["情況"],
+      "reading": "じょうきょう"
+    },
+    {
+      "category": "し行",
+      "correct": "自分たち",
+      "incorrect": ["自分達"],
+      "reading": "じぶんたち"
+    },
+    {
+      "category": "す行",
+      "correct": "随分",
+      "incorrect": ["ずいぶん"],
+      "reading": "ずいぶん"
+    },
+    {
+      "category": "す行",
+      "correct": "健やか",
+      "incorrect": ["すこやか"],
+      "reading": "すこやか"
+    },
+    {
+      "category": "す行",
+      "correct": "すなわち",
+      "incorrect": ["即ち"],
+      "reading": "すなわち"
+    },
+    {
+      "category": "す行",
+      "correct": "全て",
+      "incorrect": ["すべて"],
+      "reading": "すべて"
+    },
+    {
+      "category": "す行",
+      "correct": "進んで",
+      "incorrect": ["すすんで"],
+      "reading": "すすんで"
+    },
+    {
+      "category": "す行",
+      "correct": "すてき",
+      "incorrect": ["素敵"],
+      "reading": "すてき"
+    },
+    {
+      "category": "す行",
+      "correct": "素晴らしい",
+      "incorrect": ["すばらしい"],
+      "reading": "すばらしい"
+    },
+    {
+      "category": "せ行",
+      "correct": "せっかく",
+      "incorrect": ["折角"],
+      "reading": "せっかく"
+    },
+    {
+      "category": "せ行",
+      "correct": "是非",
+      "incorrect": ["ぜひ"],
+      "reading": "ぜひ"
+    },
+    {
+      "category": "そ行",
+      "correct": "そうじ",
+      "incorrect": ["掃除"],
+      "reading": "そうじ"
+    },
+    {
+      "category": "そ行",
+      "correct": "そばで",
+      "incorrect": ["側で"],
+      "reading": "そばで"
+    },
+    {
+      "category": "そ行",
+      "correct": "そろう",
+      "incorrect": ["揃う"],
+      "reading": "そろう"
+    },
+    {
+      "category": "た行",
+      "correct": "大変",
+      "incorrect": ["たいへん"],
+      "reading": "たいへん"
+    },
+    {
+      "category": "た行",
+      "correct": "たくさん",
+      "incorrect": ["沢山"],
+      "reading": "たくさん"
+    },
+    {
+      "category": "た行",
+      "correct": "確かな",
+      "incorrect": ["たしかな"],
+      "reading": "たしかな"
+    },
+    {
+      "category": "た行",
+      "correct": "（わたし）たち",
+      "incorrect": ["（わたし）達"],
+      "reading": "たち"
+    },
+    {
+      "category": "た行",
+      "correct": "例えば",
+      "incorrect": ["たとえば"],
+      "reading": "たとえば"
+    },
+    {
+      "category": "た行",
+      "correct": "～のため",
+      "incorrect": ["～の為"],
+      "reading": "ため"
+    },
+    {
+      "category": "た行",
+      "correct": "誰",
+      "incorrect": ["だれ"],
+      "reading": "だれ"
+    },
+    {
+      "category": "ち行",
+      "correct": "近付く",
+      "incorrect": ["近づく", "ちかづく"],
+      "reading": "ちかづく"
+    },
+    {
+      "category": "つ行",
+      "correct": "追究",
+      "incorrect": ["追求", "追及"],
+      "reading": "ついきゅう"
+    },
+    {
+      "category": "つ行",
+      "correct": "ついに",
+      "incorrect": ["遂に"],
+      "reading": "ついに"
+    },
+    {
+      "category": "つ行",
+      "correct": "努める",
+      "incorrect": ["つとめる"],
+      "reading": "つとめる"
+    },
+    {
+      "category": "つ行",
+      "correct": "つまずき",
+      "incorrect": ["つまづき"],
+      "reading": "つまずき"
+    },
+    {
+      "category": "て行",
+      "correct": "（人に）出会う",
+      "incorrect": ["出合う"],
+      "reading": "であう",
+      "note": "人の場合"
+    },
+    {
+      "category": "て行",
+      "correct": "（物・事象に）出合う",
+      "incorrect": ["出会う"],
+      "reading": "であう",
+      "note": "物・事象の場合"
+    },
+    {
+      "category": "て行",
+      "correct": "丁寧",
+      "incorrect": ["ていねい"],
+      "reading": "ていねい"
+    },
+    {
+      "category": "て行",
+      "correct": "手掛かり",
+      "incorrect": ["手がかり"],
+      "reading": "てがかり"
+    },
+    {
+      "category": "て行",
+      "correct": "的確",
+      "incorrect": ["適格"],
+      "reading": "てきかく"
+    },
+    {
+      "category": "て行",
+      "correct": "できる",
+      "incorrect": ["出来る"],
+      "reading": "できる"
+    },
+    {
+      "category": "て行",
+      "correct": "手立て",
+      "incorrect": ["手だて"],
+      "reading": "てだて"
+    },
+    {
+      "category": "と行",
+      "correct": "動機付ける",
+      "incorrect": ["動機づけ"],
+      "reading": "どうきづけ"
+    },
+    {
+      "category": "と行",
+      "correct": "○○同士",
+      "incorrect": ["○○どうし"],
+      "reading": "どうし"
+    },
+    {
+      "category": "と行",
+      "correct": "（～を）通して",
+      "incorrect": ["（～を）とおして"],
+      "reading": "とおして"
+    },
+    {
+      "category": "と行",
+      "correct": "（～の）とおり",
+      "incorrect": ["（～の）通り"],
+      "reading": "とおり"
+    },
+    {
+      "category": "と行",
+      "correct": "（～する）とき",
+      "incorrect": ["（～する）時"],
+      "reading": "とき"
+    },
+    {
+      "category": "と行",
+      "correct": "特に",
+      "incorrect": ["とくに"],
+      "reading": "とくに"
+    },
+    {
+      "category": "と行",
+      "correct": "友達",
+      "incorrect": ["友だち"],
+      "reading": "ともだち"
+    },
+    {
+      "category": "と行",
+      "correct": "伴う",
+      "incorrect": ["ともなう"],
+      "reading": "ともなう"
+    },
+    {
+      "category": "と行",
+      "correct": "（～すると）ともに",
+      "incorrect": ["（～すると）共に"],
+      "reading": "ともに"
+    },
+    {
+      "category": "と行",
+      "correct": "共に（～する）",
+      "incorrect": ["ともに（～する）"],
+      "reading": "ともに"
+    },
+    {
+      "category": "と行",
+      "correct": "捉える",
+      "incorrect": ["とらえる"],
+      "reading": "とらえる"
+    },
+    {
+      "category": "と行",
+      "correct": "取り上げる",
+      "incorrect": ["取上げる"],
+      "reading": "とりあげる"
+    },
+    {
+      "category": "と行",
+      "correct": "取り扱う",
+      "incorrect": ["取扱う"],
+      "reading": "とりあつかう"
+    },
+    {
+      "category": "と行",
+      "correct": "取組",
+      "incorrect": ["取組"],
+      "reading": "とりくみ",
+      "note": "名詞の場合"
+    },
+    {
+      "category": "と行",
+      "correct": "取り組む",
+      "incorrect": ["取組む"],
+      "reading": "とりくむ",
+      "note": "動詞の場合"
+    },
+    {
+      "category": "な行",
+      "correct": "なお",
+      "incorrect": ["尚"],
+      "reading": "なお"
+    },
+    {
+      "category": "な行",
+      "correct": "仲よく",
+      "incorrect": ["仲良く", "なかよく"],
+      "reading": "なかよく"
+    },
+    {
+      "category": "な行",
+      "correct": "仲よし",
+      "incorrect": ["仲良し", "なかよし"],
+      "reading": "なかよし"
+    },
+    {
+      "category": "な行",
+      "correct": "なぜ",
+      "incorrect": ["何故"],
+      "reading": "なぜ"
+    },
+    {
+      "category": "な行",
+      "correct": "など",
+      "incorrect": ["等"],
+      "reading": "など"
+    },
+    {
+      "category": "な行",
+      "correct": "なれる",
+      "incorrect": ["慣れる", "馴れる"],
+      "reading": "なれる"
+    },
+    {
+      "category": "の行",
+      "correct": "（リズムに）のる",
+      "incorrect": ["（リズムに）乗る"],
+      "reading": "のる"
+    },
+    {
+      "category": "は行",
+      "correct": "図る",
+      "incorrect": ["はかる"],
+      "reading": "はかる"
+    },
+    {
+      "category": "は行",
+      "correct": "育む",
+      "incorrect": ["はぐくむ"],
+      "reading": "はぐくむ"
+    },
+    {
+      "category": "は行",
+      "correct": "励まし",
+      "incorrect": ["はげまし"],
+      "reading": "はげまし"
+    },
+    {
+      "category": "は行",
+      "correct": "はじめ",
+      "incorrect": ["始め", "初め"],
+      "reading": "はじめ"
+    },
+    {
+      "category": "は行",
+      "correct": "働き掛ける",
+      "incorrect": ["はたらきかける"],
+      "reading": "はたらきかける"
+    },
+    {
+      "category": "は行",
+      "correct": "話合い",
+      "incorrect": ["話合い"],
+      "reading": "はなしあい",
+      "note": "名詞の場合"
+    },
+    {
+      "category": "は行",
+      "correct": "話し合う",
+      "incorrect": ["話合う"],
+      "reading": "はなしあう",
+      "note": "動詞の場合"
+    },
+    {
+      "category": "ひ行",
+      "correct": "日頃",
+      "incorrect": ["日ごろ"],
+      "reading": "ひごろ"
+    },
+    {
+      "category": "ひ行",
+      "correct": "一つ一つ",
+      "incorrect": ["一つひとつ"],
+      "reading": "ひとつひとつ"
+    },
+    {
+      "category": "ひ行",
+      "correct": "一つ二つ",
+      "incorrect": ["１つ２つ"],
+      "reading": "ひとつふたつ"
+    },
+    {
+      "category": "ひ行",
+      "correct": "一人一人",
+      "incorrect": ["一人ひとり"],
+      "reading": "ひとりひとり"
+    },
+    {
+      "category": "ふ行",
+      "correct": "普段",
+      "incorrect": ["ふだん"],
+      "reading": "ふだん"
+    },
+    {
+      "category": "ふ行",
+      "correct": "筆使い",
+      "incorrect": ["筆遣い", "筆づかい"],
+      "reading": "ふでづかい"
+    },
+    {
+      "category": "ふ行",
+      "correct": "踏まえて",
+      "incorrect": ["ふまえて"],
+      "reading": "ふまえて"
+    },
+    {
+      "category": "ふ行",
+      "correct": "振り返り",
+      "incorrect": ["ふりかえり"],
+      "reading": "ふりかえり"
+    },
+    {
+      "category": "ふ行",
+      "correct": "触れ合い",
+      "incorrect": ["ふれあい"],
+      "reading": "ふれあい",
+      "note": "さわるときは、触れる"
+    },
+    {
+      "category": "ふ行",
+      "correct": "雰囲気",
+      "incorrect": ["ふんい気"],
+      "reading": "ふんいき"
+    },
+    {
+      "category": "ほ行",
+      "correct": "ほか",
+      "incorrect": ["他", "外"],
+      "reading": "ほか"
+    },
+    {
+      "category": "ま行",
+      "correct": "まさに",
+      "incorrect": ["正に"],
+      "reading": "まさに"
+    },
+    {
+      "category": "ま行",
+      "correct": "まじめ",
+      "incorrect": ["真面目"],
+      "reading": "まじめ"
+    },
+    {
+      "category": "ま行",
+      "correct": "ますます",
+      "incorrect": ["益々"],
+      "reading": "ますます"
+    },
+    {
+      "category": "ま行",
+      "correct": "また",
+      "incorrect": ["又"],
+      "reading": "また",
+      "note": "接続詞の場合"
+    },
+    {
+      "category": "ま行",
+      "correct": "または",
+      "incorrect": ["又は"],
+      "reading": "または"
+    },
+    {
+      "category": "ま行",
+      "correct": "間違い",
+      "incorrect": ["まちがい"],
+      "reading": "まちがい"
+    },
+    {
+      "category": "ま行",
+      "correct": "まね",
+      "incorrect": ["真似"],
+      "reading": "まね"
+    },
+    {
+      "category": "み行",
+      "correct": "見いだす",
+      "incorrect": ["見出す"],
+      "reading": "みいだす"
+    },
+    {
+      "category": "み行",
+      "correct": "見据える",
+      "incorrect": ["見すえる"],
+      "reading": "みすえる"
+    },
+    {
+      "category": "み行",
+      "correct": "自ら",
+      "incorrect": ["みずから"],
+      "reading": "みずから"
+    },
+    {
+      "category": "み行",
+      "correct": "見付ける",
+      "incorrect": ["見つける", "みつける"],
+      "reading": "みつける"
+    },
+    {
+      "category": "み行",
+      "correct": "見とる",
+      "incorrect": ["みとる", "見取る"],
+      "reading": "みとる"
+    },
+    {
+      "category": "み行",
+      "correct": "身に付ける",
+      "incorrect": ["身につける"],
+      "reading": "みにつける"
+    },
+    {
+      "category": "み行",
+      "correct": "身の回り",
+      "incorrect": ["身の周り"],
+      "reading": "みのまわり"
+    },
+    {
+      "category": "み行",
+      "correct": "水やり",
+      "incorrect": ["水遣り"],
+      "reading": "みずやり"
+    },
+    {
+      "category": "む行",
+      "correct": "結び付く",
+      "incorrect": ["結びつく"],
+      "reading": "むすびつく"
+    },
+    {
+      "category": "め行",
+      "correct": "めあて",
+      "incorrect": ["目当て"],
+      "reading": "めあて"
+    },
+    {
+      "category": "め行",
+      "correct": "目指す",
+      "incorrect": ["目ざす", "めざす"],
+      "reading": "めざす"
+    },
+    {
+      "category": "め行",
+      "correct": "芽生え",
+      "incorrect": ["芽ばえ"],
+      "reading": "めばえ"
+    },
+    {
+      "category": "も行",
+      "correct": "持ち味",
+      "incorrect": ["もち味", "持味"],
+      "reading": "もちあじ"
+    },
+    {
+      "category": "も行",
+      "correct": "（思いを）もつ",
+      "incorrect": ["（思いを）持つ"],
+      "reading": "もつ"
+    },
+    {
+      "category": "も行",
+      "correct": "基づく",
+      "incorrect": ["もとづく"],
+      "reading": "もとづく"
+    },
+    {
+      "category": "も行",
+      "correct": "（叙述を）基にする",
+      "incorrect": ["（叙述を）もとにする"],
+      "reading": "もとにする"
+    },
+    {
+      "category": "も行",
+      "correct": "（～の）もとで",
+      "incorrect": ["（～の）下で"],
+      "reading": "もとで",
+      "note": "法の下 火の元"
+    },
+    {
+      "category": "や行",
+      "correct": "～しやすい",
+      "incorrect": ["～し易い"],
+      "reading": "やすい"
+    },
+    {
+      "category": "ゆ行",
+      "correct": "指使い",
+      "incorrect": ["指遣い", "指づかい"],
+      "reading": "ゆびづかい"
+    },
+    {
+      "category": "ゆ行",
+      "correct": "ゆだねる",
+      "incorrect": ["委ねる"],
+      "reading": "ゆだねる"
+    },
+    {
+      "category": "よ行",
+      "correct": "よい",
+      "incorrect": ["良い"],
+      "reading": "よい"
+    },
+    {
+      "category": "よ行",
+      "correct": "よさ",
+      "incorrect": ["良さ"],
+      "reading": "よさ"
+    },
+    {
+      "category": "よ行",
+      "correct": "よりどころ",
+      "incorrect": ["拠り所"],
+      "reading": "よりどころ"
+    },
+    {
+      "category": "わ行",
+      "correct": "分かる",
+      "incorrect": ["わかる"],
+      "reading": "わかる"
+    },
+    {
+      "category": "わ行",
+      "correct": "わけ",
+      "incorrect": ["訳"],
+      "reading": "わけ"
+    },
+    {
+      "category": "わ行",
+      "correct": "私",
+      "incorrect": ["わたし"],
+      "reading": "わたし"
+    },
+    {
+      "category": "わ行",
+      "correct": "私たち",
+      "incorrect": ["私達"],
+      "reading": "わたしたち"
+    },
+    {
+      "category": "わ行",
+      "correct": "（～に）わたって",
+      "incorrect": ["（～に）渡って"],
+      "reading": "わたって"
+    },
+    {
+      "category": "数字",
+      "correct": "1年生から6年生",
+      "incorrect": ["一年生～六年生"],
+      "reading": "いちねんせいからろくねんせい"
+    },
+    {
+      "category": "表現",
+      "correct": "～したり、～したり",
+      "incorrect": ["～したり"],
+      "reading": "したり"
+    },
+    {
+      "category": "表現",
+      "correct": "～や、～など",
+      "incorrect": ["～など"],
+      "reading": "など"
+    }
+  ]
+}
