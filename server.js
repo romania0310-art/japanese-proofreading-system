@@ -177,10 +177,13 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
       );
     }
 
-    // ファイル名を生成
+    // ファイル名を生成（分かりやすい形式）
     const baseName = req.file.originalname.replace(/\.[^.]+$/, '');
     const outputExtension = (extension === 'docx' || extension === 'xlsx') ? extension : 'docx';
-    const outputFileName = `${baseName}_校正済み.${outputExtension}`;
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}`;
+    const timeStr = `${now.getHours().toString().padStart(2,'0')}${now.getMinutes().toString().padStart(2,'0')}`;
+    const outputFileName = `【校正済み】${baseName}_${dateStr}_${timeStr}.${outputExtension}`;
 
     console.log('DOCX生成完了:', {
       outputFileName,
