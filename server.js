@@ -190,12 +190,15 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
       size: docxBuffer.length
     });
 
-    // レスポンスヘッダーを設定
+    // レスポンスヘッダーを設定（日本語ファイル名対応）
     const mimeType = extension === 'xlsx' 
       ? 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     res.setHeader('Content-Type', mimeType);
-    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodeURIComponent(outputFileName)}`);
+    
+    // 日本語ファイル名の適切なエンコーディング
+    const encodedFileName = encodeURIComponent(outputFileName);
+    res.setHeader('Content-Disposition', `attachment; filename="${outputFileName}"; filename*=UTF-8''${encodedFileName}`);
     res.setHeader('Content-Length', docxBuffer.length);
     
     res.send(docxBuffer);
