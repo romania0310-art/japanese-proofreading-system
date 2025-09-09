@@ -198,7 +198,8 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
     
     // 日本語ファイル名の適切なエンコーディング
     const encodedFileName = encodeURIComponent(outputFileName);
-    res.setHeader('Content-Disposition', `attachment; filename="${outputFileName}"; filename*=UTF-8''${encodedFileName}`);
+    // HTTPヘッダーには日本語文字を直接含められないため、エンコードされた形式のみ使用
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFileName}`);
     res.setHeader('Content-Length', docxBuffer.length);
     
     res.send(docxBuffer);
