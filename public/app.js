@@ -360,7 +360,12 @@ class JapaneseProofreadingSystem {
             // 正しい日本語ファイル名を送信（文字化け対策）
             formData.append('originalFileName', this.currentFile.name);
             
+            console.log('=== DOWNLOAD DEBUG ===');
             console.log('送信ファイル名:', this.currentFile.name);
+            console.log('校正前テキスト:', this.currentResult.parseResult.text);
+            console.log('校正後テキスト:', this.currentResult.proofreadResult.correctedText);
+            console.log('変更一覧:', this.currentResult.proofreadResult.changes);
+            console.log('変更件数:', this.currentResult.proofreadResult.totalChanges);
 
             const button = document.getElementById('download-docx-btn');
             const originalText = button.innerHTML;
