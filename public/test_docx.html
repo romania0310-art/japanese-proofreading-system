@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DOCXテストファイル作成</title>
+</head>
+<body>
+    <h1>DOCXテストファイル</h1>
+    <div id="content">
+        <p>教えあいの重要性について</p>
+        <p>学校教育では、生徒同士が教えあいをすることが大切です。</p>
+        <p>教えあいを通じて、知識の定着と理解の深化が図れます。</p>
+        <p>教えあいは相互学習の基盤となり、学習効果を高めます。</p>
+        
+        <h2>教えあいの場面：</h2>
+        <ol>
+            <li>数学の問題解説時</li>
+            <li>理科の実験での協力</li>
+            <li>国語の読解問題の討論</li>
+            <li>社会の資料分析</li>
+        </ol>
+        
+        <p>このように、教えあいは学習において欠かせない要素です。</p>
+    </div>
+
+    <script>
+        // テキスト部分をコピー用に表示
+        document.addEventListener('DOMContentLoaded', function() {
+            const content = document.getElementById('content');
+            const text = content.textContent || content.innerText;
+            console.log('テスト用テキスト:');
+            console.log(text);
+            
+            // テキストエリアを追加してコピーしやすくする
+            const textarea = document.createElement('textarea');
+            textarea.style.width = '100%';
+            textarea.style.height = '200px';
+            textarea.value = text;
+            document.body.appendChild(textarea);
+            
+            const button = document.createElement('button');
+            button.textContent = 'テキストをコピー';
+            button.onclick = function() {
+                textarea.select();
+                document.execCommand('copy');
+                alert('テキストをコピーしました');
+            };
+            document.body.appendChild(button);
+        });
+    </script>
+</body>
+</html>
