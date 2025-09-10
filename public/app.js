@@ -197,6 +197,9 @@ class JapaneseProofreadingSystem {
     }
 
     async proofreadText(text) {
+        console.log('=== PROOFREADING DEBUG ===');
+        console.log('Input text:', text);
+        
         const response = await fetch(`${this.apiBaseUrl}/api/proofread`, {
             method: 'POST',
             headers: {
@@ -205,7 +208,14 @@ class JapaneseProofreadingSystem {
             body: JSON.stringify({ text })
         });
 
-        return await response.json();
+        const result = await response.json();
+        
+        console.log('Proofreading API response:', result);
+        console.log('Corrected text:', result.result?.correctedText);
+        console.log('Total changes:', result.result?.totalChanges);
+        console.log('Changes list:', result.result?.changes);
+        
+        return result;
     }
 
     showResults(parseResult, proofreadResult) {
@@ -237,18 +247,26 @@ class JapaneseProofreadingSystem {
             changesArea.classList.remove('hidden');
         }
 
+        console.log('=== RESULTS DISPLAY DEBUG ===');
+        console.log('Parse result:', parseResult);
+        console.log('Proofread result:', proofreadResult);
         console.log('Results displayed:', {
             originalLength: parseResult.text.length,
             changesCount: proofreadResult.totalChanges,
-            tablesCount: parseResult.metadata?.tables || 0
+            tablesCount: parseResult.metadata?.tables || 0,
+            changes: proofreadResult.changes
         });
     }
 
     showChangesList(changes) {
+        console.log('=== CHANGES LIST DEBUG ===');
+        console.log('Changes to display:', changes);
+        
         const changesList = document.getElementById('changes-list');
         changesList.innerHTML = '';
 
         changes.forEach((change, index) => {
+            console.log(`Change ${index + 1}:`, change);
             const changeItem = document.createElement('div');
             changeItem.className = 'bg-yellow-50 border-l-4 border-yellow-400 p-3 rounded';
             
