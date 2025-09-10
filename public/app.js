@@ -338,6 +338,11 @@ class JapaneseProofreadingSystem {
             formData.append('correctedText', this.currentResult.proofreadResult.correctedText);
             formData.append('originalText', this.currentResult.parseResult.text);
             formData.append('changes', JSON.stringify(this.currentResult.proofreadResult.changes));
+            
+            // 正しい日本語ファイル名を送信（文字化け対策）
+            formData.append('originalFileName', this.currentFile.name);
+            
+            console.log('送信ファイル名:', this.currentFile.name);
 
             const button = document.getElementById('download-docx-btn');
             const originalText = button.innerHTML;

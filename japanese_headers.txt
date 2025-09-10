@@ -1,0 +1,22 @@
+HTTP/1.1 200 OK
+Content-Security-Policy: default-src 'self';script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com;style-src 'self' 'unsafe-inline' https://cdn.jsdelivr.net;font-src 'self' https://cdn.jsdelivr.net;img-src 'self' data: https:;base-uri 'self';form-action 'self';frame-ancestors 'self';object-src 'none';script-src-attr 'none';upgrade-insecure-requests
+Cross-Origin-Opener-Policy: same-origin
+Cross-Origin-Resource-Policy: same-origin
+Origin-Agent-Cluster: ?1
+Referrer-Policy: no-referrer
+Strict-Transport-Security: max-age=15552000; includeSubDomains
+X-Content-Type-Options: nosniff
+X-DNS-Prefetch-Control: off
+X-Download-Options: noopen
+X-Frame-Options: SAMEORIGIN
+X-Permitted-Cross-Domain-Policies: none
+X-XSS-Protection: 0
+Access-Control-Allow-Origin: *
+Content-Type: application/vnd.openxmlformats-officedocument.wordprocessingml.document
+Content-Disposition: attachment; filename*=UTF-8''%E3%80%90%E6%A0%A1%E6%AD%A3%E6%B8%88%E3%81%BF%E3%80%9120250305%20%C3%A3%C2%80%C2%90%C3%A4%C2%BF%C2%9D%C3%A8%C2%AD%C2%B7%C3%A8%C2%80%C2%85%C3%A5%C2%90%C2%91%C3%A3%C2%81%C2%91%C3%A3%C2%80%C2%914%C3%A5%C2%B9%C2%B4%C3%A5%C2%AE%C2%BF%C3%A6%C2%B3%C2%8A%C3%A4%C2%B8%C2%AD%C3%A6%C2%AD%C2%A2%C3%AF%C2%BC%C2%92_20250910_0926.docx
+Content-Length: 7719
+ETag: W/"1e27-9fbQ/xSKCeLyOgf3P4C/SJzSy4U"
+Date: Wed, 10 Sep 2025 09:26:00 GMT
+Connection: keep-alive
+Keep-Alive: timeout=5
+

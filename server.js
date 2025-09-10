@@ -40,6 +40,25 @@ const upload = multer({
   limits: {
     fileSize: 10 * 1024 * 1024, // 10MB制限
   },
+  // 日本語ファイル名対応
+  preservePath: false,
+  // ファイル名の文字エンコーディングを適切に処理
+  fileFilter: (req, file, cb) => {
+    try {
+      // originalname が正しく UTF-8 でデコードされていない場合の対処
+      if (file.originalname.includes('\\x') || file.originalname.includes('ã')) {
+        // 文字化けしている可能性があるため、Base64でデコードを試行
+        console.log('文字化けファイル名を検出:', file.originalname);
+        
+        // フロントエンドからの正しいファイル名が追加フィールドで送信される場合の処理
+        // 現在はとりあえず通す
+      }
+      cb(null, true);
+    } catch (error) {
+      console.error('ファイル名処理エラー:', error);
+      cb(null, true); // エラーでも通す
+    }
+  }
 });
 
 // インスタンス初期化
@@ -136,7 +155,7 @@ app.post('/api/proofread', (req, res) => {
 // 校正後DOCXダウンロードAPI
 app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
   try {
-    const { correctedText, originalText, changes } = req.body;
+    const { correctedText, originalText, changes, originalFileName } = req.body;
     
     if (!req.file) {
       return res.status(400).json({ 
@@ -153,11 +172,27 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
     }
 
     console.log('=== DOCX生成開始 ===');
-    console.log('元ファイル:', req.file.originalname);
+    
+    // ファイル名の適切な取得（フロントエンドから送信された正しいファイル名を優先）
+    let actualFileName = originalFileName || req.file.originalname;
+    
+    // Base64デコードの試行（フロントエンドでエンコードされている場合）
+    if (originalFileName && originalFileName.startsWith('data:')) {
+      try {
+        // data: URLs形式の場合
+        const base64Data = originalFileName.split(',')[1];
+        actualFileName = Buffer.from(base64Data, 'base64').toString('utf8');
+      } catch (e) {
+        actualFileName = originalFileName;
+      }
+    }
+    
+    console.log('元ファイル名（受信）:', req.file.originalname);
+    console.log('元ファイル名（使用）:', actualFileName);
     console.log('校正テキスト長:', correctedText.length);
 
     let docxBuffer;
-    const extension = req.file.originalname.toLowerCase().split('.').pop();
+    const extension = actualFileName.toLowerCase().split('.').pop();
     
     if (extension === 'docx' || extension === 'xlsx') {
       // DOCX/XLSXの場合：元の構造を保持して生成
@@ -178,7 +213,7 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
     }
 
     // ファイル名を生成（分かりやすい形式）
-    const baseName = req.file.originalname.replace(/\.[^.]+$/, '');
+    const baseName = actualFileName.replace(/\.[^.]+$/, '');
     const outputExtension = (extension === 'docx' || extension === 'xlsx') ? extension : 'docx';
     const now = new Date();
     const dateStr = `${now.getFullYear()}${(now.getMonth()+1).toString().padStart(2,'0')}${now.getDate().toString().padStart(2,'0')}`;
@@ -199,12 +234,28 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
       : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     res.setHeader('Content-Type', mimeType);
     
-    // 日本語ファイル名の適切なエンコーディング（複数のブラウザ対応）
+    // 日本語ファイル名対応：元のファイル名の形式を最大限保持
     const encodedFileName = encodeURIComponent(outputFileName);
-    const asciiFileName = `corrected_${baseName.replace(/[^\w\-_]/g, '_')}_${dateStr}_${timeStr}.${outputExtension}`;
     
-    // RFC 6266準拠のContent-Dispositionヘッダー（日本語ファイル名対応）
-    res.setHeader('Content-Disposition', `attachment; filename="${asciiFileName}"; filename*=UTF-8''${encodedFileName}`);
+    // ASCII互換ファイル名：ファイルシステム禁止文字のみ置換（日本語は残す）
+    const safeBaseName = baseName.replace(/[<>:"/\\|?*]/g, '_');
+    const asciiFileName = `corrected_${safeBaseName}_${dateStr}_${timeStr}.${outputExtension}`;
+    
+    console.log('ファイル名生成詳細:', {
+      originalBaseName: baseName,
+      safeBaseName: safeBaseName,
+      outputFileName: outputFileName,
+      asciiFileName: asciiFileName,
+      encodedFileName: encodedFileName
+    });
+    
+    // RFC 6266準拠のContent-Dispositionヘッダー
+    // filename*=UTF-8''が優先される（モダンブラウザ）
+    // filenameはフォールバック用（古いブラウザ）
+    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFileName}`);
+    
+    // デバッグ用：代替手法も試してみる
+    // res.setHeader('Content-Disposition', `attachment; filename="${outputFileName}"; filename*=UTF-8''${encodedFileName}`);
     res.setHeader('Content-Length', docxBuffer.length);
     
     res.send(docxBuffer);
