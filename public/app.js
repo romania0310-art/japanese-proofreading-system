@@ -361,15 +361,29 @@ class JapaneseProofreadingSystem {
                 throw new Error('ダウンロードに失敗しました');
             }
 
-            // ファイル名を取得
+            // ファイル名を取得（RFC 6266対応）
             const contentDisposition = response.headers.get('Content-Disposition');
             let fileName = 'corrected_document.docx';
+            
+            console.log('Content-Disposition header:', contentDisposition);
+            
             if (contentDisposition) {
-                const match = contentDisposition.match(/filename\*?=['"]?([^;'"]*)/);
-                if (match) {
-                    fileName = decodeURIComponent(match[1]);
+                // RFC 6266 filename*=UTF-8''形式を優先
+                const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;]*)/);
+                if (utf8Match) {
+                    fileName = decodeURIComponent(utf8Match[1]);
+                    console.log('UTF-8 filename extracted:', fileName);
+                } else {
+                    // フォールバック: 通常のfilename形式
+                    const normalMatch = contentDisposition.match(/filename=['"]?([^;'"]*)/);
+                    if (normalMatch) {
+                        fileName = normalMatch[1];
+                        console.log('Normal filename extracted:', fileName);
+                    }
                 }
             }
+            
+            console.log('Final filename for download:', fileName);
 
             // ファイルをダウンロード
             const blob = await response.blob();
