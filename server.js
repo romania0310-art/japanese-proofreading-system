@@ -186,7 +186,10 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
     const outputFileName = `【校正済み】${baseName}_${dateStr}_${timeStr}.${outputExtension}`;
 
     console.log('DOCX生成完了:', {
-      outputFileName,
+      originalFileName: req.file.originalname,
+      baseName: baseName,
+      outputFileName: outputFileName,
+      encodedFileName: encodeURIComponent(outputFileName),
       size: docxBuffer.length
     });
 
@@ -196,10 +199,12 @@ app.post('/api/generate-docx', upload.single('file'), async (req, res) => {
       : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document';
     res.setHeader('Content-Type', mimeType);
     
-    // 日本語ファイル名の適切なエンコーディング
+    // 日本語ファイル名の適切なエンコーディング（複数のブラウザ対応）
     const encodedFileName = encodeURIComponent(outputFileName);
-    // HTTPヘッダーには日本語文字を直接含められないため、エンコードされた形式のみ使用
-    res.setHeader('Content-Disposition', `attachment; filename*=UTF-8''${encodedFileName}`);
+    const asciiFileName = `corrected_${baseName.replace(/[^\w\-_]/g, '_')}_${dateStr}_${timeStr}.${outputExtension}`;
+    
+    // RFC 6266準拠のContent-Dispositionヘッダー（日本語ファイル名対応）
+    res.setHeader('Content-Disposition', `attachment; filename="${asciiFileName}"; filename*=UTF-8''${encodedFileName}`);
     res.setHeader('Content-Length', docxBuffer.length);
     
     res.send(docxBuffer);

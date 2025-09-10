@@ -1096,6 +1096,36 @@
       "correct": "～や、～など",
       "incorrect": ["～など"],
       "reading": "など"
+    },
+    {
+      "category": "か行",
+      "correct": "感動",
+      "incorrect": ["かんどう"],
+      "reading": "かんどう"
+    },
+    {
+      "category": "お行",
+      "correct": "教え合い",
+      "incorrect": ["教えあい", "おしえあい"],
+      "reading": "おしえあい"
+    },
+    {
+      "category": "お行",
+      "correct": "お互い",
+      "incorrect": ["おたがい"],
+      "reading": "おたがい"
+    },
+    {
+      "category": "た行",
+      "correct": "助け合い",
+      "incorrect": ["助けあい", "たすけあい"],
+      "reading": "たすけあい"
+    },
+    {
+      "category": "は行",
+      "correct": "話し合い",
+      "incorrect": ["話しあい", "はなしあい"],
+      "reading": "はなしあい"
     }
   ]
 }
