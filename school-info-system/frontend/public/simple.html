@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学校情報共有システム</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1976d2;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 500;
+        }
+        
+        .admin-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: 1px solid rgba(255,255,255,0.3);
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .admin-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .main-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .voice-section h2 {
+            margin-bottom: 2rem;
+            color: #1976d2;
+            font-weight: 500;
+        }
+        
+        .voice-button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 120px;
+            height: 120px;
+            font-size: 2.5rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 2rem;
+            box-shadow: 0 4px 12px rgba(25, 118, 210, 0.3);
+        }
+        
+        .voice-button:hover {
+            background: #1565c0;
+            transform: scale(1.05);
+        }
+        
+        .voice-button.recording {
+            background: #dc004e;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+        
+        .btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #1565c0;
+        }
+        
+        .btn.secondary {
+            background: #666;
+        }
+        
+        .btn.secondary:hover {
+            background: #555;
+        }
+        
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+        }
+        
+        .transcript {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 1.5rem;
+            min-height: 120px;
+            background: #fafafa;
+            text-align: left;
+            font-size: 1.1rem;
+            line-height: 1.5;
+        }
+        
+        .transcript.active {
+            border-color: #1976d2;
+            background: white;
+        }
+        
+        .transcript.empty {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #999;
+            font-style: italic;
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+            font-weight: 500;
+        }
+        
+        .status.info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1976d2;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        
+        .status.success {
+            background: #e8f5e8;
+            border: 1px solid #4caf50;
+            color: #2e7d32;
+        }
+        
+        .connection-status {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+        
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #ff9800;
+        }
+        
+        .status-dot.connected {
+            background: #4caf50;
+        }
+        
+        .status-dot.error {
+            background: #f44336;
+        }
+        
+        .admin-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .admin-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+        
+        .modal-title {
+            color: #1976d2;
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1rem;
+            text-align: left;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1.5rem;
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .header h1 {
+                font-size: 1.2rem;
+            }
+            
+            .admin-btn {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.8rem;
+            }
+            
+            .voice-button {
+                width: 100px;
+                height: 100px;
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 200px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>学校情報共有システム</h1>
+        <button class="admin-btn" onclick="openAdminModal()">
+            <span class="material-icons" style="font-size: 1.2rem;">settings</span>
+            管理者画面
+        </button>
+    </div>
+    
+    <div class="connection-status">
+        <div id="statusDot" class="status-dot"></div>
+        <span id="connectionText">接続確認中...</span>
+    </div>
+    
+    <div class="container">
+        <div class="main-card">
+            <div class="voice-section">
+                <h2>音声入力</h2>
+                
+                <button id="voiceButton" class="voice-button">
+                    <span class="material-icons">mic</span>
+                </button>
+                
+                <div class="controls">
+                    <button id="startBtn" class="btn">
+                        <span class="material-icons">play_arrow</span>
+                        開始
+                    </button>
+                    <button id="stopBtn" class="btn secondary" disabled>
+                        <span class="material-icons">stop</span>
+                        停止
+                    </button>
+                    <button id="clearBtn" class="btn secondary">
+                        <span class="material-icons">clear</span>
+                        クリア
+                    </button>
+                </div>
+                
+                <div id="transcript" class="transcript empty">
+                    音声入力の結果がここに表示されます
+                </div>
+                
+                <div id="status" class="status info" style="display: none;">
+                    準備中...
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- 管理者ログインモーダル -->
+    <div id="adminModal" class="admin-modal">
+        <div class="modal-content">
+            <h3 class="modal-title">管理者ログイン</h3>
+            <form id="adminLoginForm">
+                <div class="form-group">
+                    <label for="username">ユーザー名</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">パスワード</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn">ログイン</button>
+                    <button type="button" class="btn secondary" onclick="closeAdminModal()">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // APIベースURL
+        const API_BASE_URL = 'https://3005-ilykkzen15fa0ckzitfr8-583b4d74.sandbox.novita.ai';
+        
+        // DOM要素
+        const voiceButton = document.getElementById('voiceButton');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const transcriptDiv = document.getElementById('transcript');
+        const statusDiv = document.getElementById('status');
+        const statusDot = document.getElementById('statusDot');
+        const connectionText = document.getElementById('connectionText');
+        const adminModal = document.getElementById('adminModal');
+        const adminLoginForm = document.getElementById('adminLoginForm');
+        
+        // 音声認識の状態
+        let recognition = null;
+        let isRecording = false;
+        
+        // API接続確認
+        async function checkApiConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    statusDot.classList.add('connected');
+                    statusDot.classList.remove('error');
+                    connectionText.textContent = '接続済み';
+                } else {
+                    throw new Error('API応答エラー');
+                }
+            } catch (error) {
+                statusDot.classList.add('error');
+                statusDot.classList.remove('connected');
+                connectionText.textContent = '接続エラー';
+                console.error('API接続エラー:', error);
+            }
+        }
+        
+        // 音声認識の初期化
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+            } else if ('SpeechRecognition' in window) {
+                recognition = new SpeechRecognition();
+            } else {
+                showStatus('このブラウザは音声認識に対応していません', 'error');
+                return false;
+            }
+            
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ja-JP';
+            
+            recognition.onstart = function() {
+                isRecording = true;
+                voiceButton.classList.add('recording');
+                voiceButton.innerHTML = '<span class="material-icons">stop</span>';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                transcriptDiv.classList.add('active');
+                transcriptDiv.classList.remove('empty');
+                showStatus('音声認識中...', 'info');
+            };
+            
+            recognition.onresult = function(event) {
+                let finalTranscript = '';
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                transcriptDiv.innerHTML = finalTranscript + '<span style="color: #999; font-style: italic;">' + interimTranscript + '</span>';
+            };
+            
+            recognition.onend = function() {
+                isRecording = false;
+                voiceButton.classList.remove('recording');
+                voiceButton.innerHTML = '<span class="material-icons">mic</span>';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                transcriptDiv.classList.remove('active');
+                hideStatus();
+            };
+            
+            recognition.onerror = function(event) {
+                showStatus('音声認識エラー: ' + event.error, 'error');
+                console.error('音声認識エラー:', event.error);
+            };
+            
+            return true;
+        }
+        
+        // 音声認識開始
+        function startRecording() {
+            if (recognition && !isRecording) {
+                recognition.start();
+            }
+        }
+        
+        // 音声認識停止
+        function stopRecording() {
+            if (recognition && isRecording) {
+                recognition.stop();
+            }
+        }
+        
+        // 転写内容クリア
+        function clearTranscript() {
+            transcriptDiv.textContent = '音声入力の結果がここに表示されます';
+            transcriptDiv.classList.remove('active');
+            transcriptDiv.classList.add('empty');
+        }
+        
+        // ステータス表示
+        function showStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+        }
+        
+        // ステータス非表示
+        function hideStatus() {
+            statusDiv.style.display = 'none';
+        }
+        
+        // 管理者モーダル開く
+        function openAdminModal() {
+            adminModal.classList.add('show');
+        }
+        
+        // 管理者モーダル閉じる
+        function closeAdminModal() {
+            adminModal.classList.remove('show');
+            adminLoginForm.reset();
+        }
+        
+        // 管理者ログイン処理
+        async function handleAdminLogin(event) {
+            event.preventDefault();
+            
+            const username = document.getElementById('username').value;
+            const password = document.getElementById('password').value;
+            
+            try {
+                showStatus('ログイン中...', 'info');
+                
+                const response = await fetch(`${API_BASE_URL}/auth/login`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({ username, password })
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok && data.success) {
+                    showStatus('ログイン成功', 'success');
+                    closeAdminModal();
+                    
+                    // 管理者画面に遷移（簡単な管理画面を表示）
+                    setTimeout(() => {
+                        showAdminDashboard(data.user, data.tokens.accessToken);
+                    }, 1000);
+                } else {
+                    showStatus(data.message || 'ログインに失敗しました', 'error');
+                }
+                
+            } catch (error) {
+                console.error('ログインエラー:', error);
+                showStatus('ログインエラーが発生しました', 'error');
+            }
+        }
+        
+        // 管理者ダッシュボード表示
+        function showAdminDashboard(user, token) {
+            // 新しいタブで管理画面を開く（実際には別ページを作成可能）
+            const adminWindow = window.open('', '_blank');
+            adminWindow.document.write(`
+                <!DOCTYPE html>
+                <html lang="ja">
+                <head>
+                    <meta charset="UTF-8">
+                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+                    <title>管理者画面 - 学校情報共有システム</title>
+                    <style>
+                        body { font-family: 'Roboto', sans-serif; padding: 2rem; background: #f5f5f5; }
+                        .header { background: #1976d2; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
+                        .card { background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+                        .user-info { display: flex; align-items: center; gap: 1rem; }
+                        .btn { background: #1976d2; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
+                        .btn:hover { background: #1565c0; }
+                    </style>
+                </head>
+                <body>
+                    <div class="header">
+                        <h1>管理者画面</h1>
+                        <div class="user-info">
+                            <span>ログイン中: ${user.fullName || user.username} (${user.role})</span>
+                            <button class="btn" onclick="window.close()">閉じる</button>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>ユーザー管理</h3>
+                        <p>入力者や受信者の追加・変更・削除を行えます</p>
+                        <button class="btn" onclick="alert('ユーザー管理機能は開発中です')">ユーザー管理を開く</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>グループ管理</h3>
+                        <p>部署やチーム別のグループ設定を管理できます</p>
+                        <button class="btn" onclick="alert('グループ管理機能は開発中です')">グループ管理を開く</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>メッセージ履歴</h3>
+                        <p>送受信されたメッセージの履歴を確認できます</p>
+                        <button class="btn" onclick="alert('メッセージ履歴機能は開発中です')">履歴を表示</button>
+                    </div>
+                    
+                    <div class="card">
+                        <h3>システム設定</h3>
+                        <p>システム全体の設定を変更できます</p>
+                        <button class="btn" onclick="alert('システム設定機能は開発中です')">設定を開く</button>
+                    </div>
+                </body>
+                </html>
+            `);
+        }
+        
+        // イベントリスナー
+        voiceButton.addEventListener('click', function() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+        
+        startBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+        clearBtn.addEventListener('click', clearTranscript);
+        adminLoginForm.addEventListener('submit', handleAdminLogin);
+        
+        // モーダル外クリックで閉じる
+        adminModal.addEventListener('click', function(e) {
+            if (e.target === adminModal) {
+                closeAdminModal();
+            }
+        });
+        
+        // 初期化
+        window.addEventListener('load', function() {
+            checkApiConnection();
+            
+            if (initSpeechRecognition()) {
+                showStatus('音声認識が利用可能です', 'success');
+                setTimeout(hideStatus, 3000);
+            }
+            
+            // 定期的にAPI接続確認
+            setInterval(checkApiConnection, 30000);
+        });
+    </script>
+</body>
+</html>
