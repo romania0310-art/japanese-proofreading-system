@@ -17,7 +17,7 @@ const auditLogger = async (req, res, next) => {
   ];
 
   if (skipRoutes.includes(req.path) || 
-      skipPaths.some(path => req.path.startsWith(path))) {
+      skipPaths.some(path => req.path && req.path.startsWith(path))) {
     return next();
   }
 
@@ -44,23 +44,23 @@ const auditLogger = async (req, res, next) => {
       const duration = Date.now() - req.auditStartTime;
       
       // Determine action based on method and path
-      let action = `${req.method} ${req.path}`;
-      let resource = req.path.split('/')[1] || 'unknown';
+      let action = `${req.method} ${req.path || 'unknown'}`;
+      let resource = (req.path && req.path.split('/')[1]) || 'unknown';
 
       // More specific action naming
-      if (req.path.startsWith('/auth/login')) {
+      if (req.path && req.path.startsWith('/auth/login')) {
         action = 'LOGIN_ATTEMPT';
         resource = 'authentication';
-      } else if (req.path.startsWith('/auth/logout')) {
+      } else if (req.path && req.path.startsWith('/auth/logout')) {
         action = 'LOGOUT';
         resource = 'authentication';
-      } else if (req.path.startsWith('/api/messages')) {
+      } else if (req.path && req.path.startsWith('/api/messages')) {
         if (req.method === 'POST') action = 'MESSAGE_CREATE';
         else if (req.method === 'GET') action = 'MESSAGE_READ';
         else if (req.method === 'PUT') action = 'MESSAGE_UPDATE';
         else if (req.method === 'DELETE') action = 'MESSAGE_DELETE';
         resource = 'messages';
-      } else if (req.path.startsWith('/api/users')) {
+      } else if (req.path && req.path.startsWith('/api/users')) {
         if (req.method === 'POST') action = 'USER_CREATE';
         else if (req.method === 'GET') action = 'USER_READ';
         else if (req.method === 'PUT') action = 'USER_UPDATE';
@@ -87,7 +87,7 @@ const auditLogger = async (req, res, next) => {
         userAgent,
         details: {
           method: req.method,
-          path: req.path,
+          path: req.path || 'unknown',
           statusCode: responseStatus,
           duration: duration,
           queryParams: Object.keys(req.query).length > 0 ? req.query : null,
