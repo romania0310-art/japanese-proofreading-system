@@ -1,0 +1,401 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>学校情報共有システム - デモ</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1976d2;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 2rem auto;
+            padding: 0 1rem;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .voice-input-section {
+            text-align: center;
+        }
+        
+        .voice-button {
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 100px;
+            height: 100px;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+        }
+        
+        .voice-button:hover {
+            background: #1565c0;
+            transform: scale(1.05);
+        }
+        
+        .voice-button.recording {
+            background: #dc004e;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        .transcript {
+            border: 2px dashed #ddd;
+            border-radius: 8px;
+            padding: 1rem;
+            min-height: 120px;
+            margin-top: 1rem;
+            background: #fafafa;
+        }
+        
+        .transcript.active {
+            border-color: #1976d2;
+            background: white;
+        }
+        
+        .controls {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+        
+        .btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .btn:hover {
+            background: #1565c0;
+        }
+        
+        .btn.secondary {
+            background: #666;
+        }
+        
+        .btn.secondary:hover {
+            background: #555;
+        }
+        
+        .status {
+            margin-top: 1rem;
+            padding: 1rem;
+            border-radius: 8px;
+            text-align: center;
+        }
+        
+        .status.info {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            color: #1976d2;
+        }
+        
+        .status.error {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            color: #c62828;
+        }
+        
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+        
+        .feature {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .feature-icon {
+            font-size: 3rem;
+            color: #1976d2;
+            margin-bottom: 1rem;
+        }
+        
+        .api-status {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            color: #ef6c00;
+            padding: 1rem;
+            border-radius: 8px;
+            margin-bottom: 1rem;
+        }
+        
+        .api-status.connected {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            color: #2e7d32;
+        }
+        
+        #connectionStatus {
+            font-weight: 500;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>学校情報共有システム - デモ版</h1>
+    </div>
+    
+    <div class="container">
+        <div class="card">
+            <div id="apiStatus" class="api-status">
+                <strong>API接続状況:</strong> <span id="connectionStatus">確認中...</span>
+            </div>
+            
+            <div class="voice-input-section">
+                <h2>🎤 音声入力機能</h2>
+                <p>下のマイクボタンを押して、音声で情報を入力してください</p>
+                
+                <button id="voiceButton" class="voice-button">
+                    <span class="material-icons">mic</span>
+                </button>
+                
+                <div class="controls">
+                    <button id="startBtn" class="btn">
+                        <span class="material-icons">play_arrow</span>
+                        開始
+                    </button>
+                    <button id="stopBtn" class="btn secondary" disabled>
+                        <span class="material-icons">stop</span>
+                        停止
+                    </button>
+                    <button id="clearBtn" class="btn secondary">
+                        <span class="material-icons">clear</span>
+                        クリア
+                    </button>
+                </div>
+                
+                <div id="transcript" class="transcript">
+                    音声入力の結果がここに表示されます...
+                </div>
+                
+                <div id="status" class="status info" style="display: none;">
+                    ブラウザの音声認識機能を確認中...
+                </div>
+            </div>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <div class="feature-icon">🔐</div>
+                <h3>セキュリティ</h3>
+                <p>3段階の機密レベルと暗号化による安全な情報管理</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">⚡</div>
+                <h3>迅速な共有</h3>
+                <p>音声入力による素早い情報入力と即座の配信</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">👥</div>
+                <h3>役割管理</h3>
+                <p>担当者別のアクセス権限と受信者管理</p>
+            </div>
+            <div class="feature">
+                <div class="feature-icon">📱</div>
+                <h3>モバイル対応</h3>
+                <p>スマホやタブレットからの快適な操作</p>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // APIベースURL
+        const API_BASE_URL = 'https://3005-ilykkzen15fa0ckzitfr8-583b4d74.sandbox.novita.ai';
+        
+        // DOM要素
+        const voiceButton = document.getElementById('voiceButton');
+        const startBtn = document.getElementById('startBtn');
+        const stopBtn = document.getElementById('stopBtn');
+        const clearBtn = document.getElementById('clearBtn');
+        const transcriptDiv = document.getElementById('transcript');
+        const statusDiv = document.getElementById('status');
+        const apiStatusDiv = document.getElementById('apiStatus');
+        const connectionStatusSpan = document.getElementById('connectionStatus');
+        
+        // 音声認識の状態
+        let recognition = null;
+        let isRecording = false;
+        
+        // API接続確認
+        async function checkApiConnection() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/health`);
+                if (response.ok) {
+                    connectionStatusSpan.textContent = '接続済み ✓';
+                    apiStatusDiv.classList.add('connected');
+                } else {
+                    throw new Error('API応答エラー');
+                }
+            } catch (error) {
+                connectionStatusSpan.textContent = '接続不可 ✗';
+                console.error('API接続エラー:', error);
+            }
+        }
+        
+        // 音声認識の初期化
+        function initSpeechRecognition() {
+            if ('webkitSpeechRecognition' in window) {
+                recognition = new webkitSpeechRecognition();
+            } else if ('SpeechRecognition' in window) {
+                recognition = new SpeechRecognition();
+            } else {
+                showStatus('このブラウザは音声認識に対応していません', 'error');
+                return false;
+            }
+            
+            recognition.continuous = true;
+            recognition.interimResults = true;
+            recognition.lang = 'ja-JP';
+            
+            recognition.onstart = function() {
+                isRecording = true;
+                voiceButton.classList.add('recording');
+                voiceButton.innerHTML = '<span class="material-icons">stop</span>';
+                startBtn.disabled = true;
+                stopBtn.disabled = false;
+                transcriptDiv.classList.add('active');
+                showStatus('音声認識開始...', 'info');
+            };
+            
+            recognition.onresult = function(event) {
+                let finalTranscript = '';
+                let interimTranscript = '';
+                
+                for (let i = event.resultIndex; i < event.results.length; i++) {
+                    const transcript = event.results[i][0].transcript;
+                    if (event.results[i].isFinal) {
+                        finalTranscript += transcript;
+                    } else {
+                        interimTranscript += transcript;
+                    }
+                }
+                
+                transcriptDiv.innerHTML = finalTranscript + '<span style="color: #999;">' + interimTranscript + '</span>';
+            };
+            
+            recognition.onend = function() {
+                isRecording = false;
+                voiceButton.classList.remove('recording');
+                voiceButton.innerHTML = '<span class="material-icons">mic</span>';
+                startBtn.disabled = false;
+                stopBtn.disabled = true;
+                transcriptDiv.classList.remove('active');
+                hideStatus();
+            };
+            
+            recognition.onerror = function(event) {
+                showStatus('音声認識エラー: ' + event.error, 'error');
+                console.error('音声認識エラー:', event.error);
+            };
+            
+            return true;
+        }
+        
+        // 音声認識開始
+        function startRecording() {
+            if (recognition && !isRecording) {
+                recognition.start();
+            }
+        }
+        
+        // 音声認識停止
+        function stopRecording() {
+            if (recognition && isRecording) {
+                recognition.stop();
+            }
+        }
+        
+        // 転写内容クリア
+        function clearTranscript() {
+            transcriptDiv.textContent = '音声入力の結果がここに表示されます...';
+            transcriptDiv.classList.remove('active');
+        }
+        
+        // ステータス表示
+        function showStatus(message, type = 'info') {
+            statusDiv.textContent = message;
+            statusDiv.className = `status ${type}`;
+            statusDiv.style.display = 'block';
+        }
+        
+        // ステータス非表示
+        function hideStatus() {
+            statusDiv.style.display = 'none';
+        }
+        
+        // イベントリスナー
+        voiceButton.addEventListener('click', function() {
+            if (isRecording) {
+                stopRecording();
+            } else {
+                startRecording();
+            }
+        });
+        
+        startBtn.addEventListener('click', startRecording);
+        stopBtn.addEventListener('click', stopRecording);
+        clearBtn.addEventListener('click', clearTranscript);
+        
+        // 初期化
+        window.addEventListener('load', function() {
+            checkApiConnection();
+            
+            if (initSpeechRecognition()) {
+                showStatus('音声認識が利用可能です', 'info');
+                setTimeout(hideStatus, 3000);
+            }
+        });
+    </script>
+</body>
+</html>

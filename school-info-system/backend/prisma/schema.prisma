@@ -1,0 +1,168 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id                  Int      @id @default(autoincrement())
+  username           String   @unique
+  email              String   @unique
+  passwordHash       String   @map("password_hash")
+  role               Role     @default(USER)
+  department         String?
+  fullName           String?  @map("full_name")
+  phone              String?
+  isActive           Boolean  @default(true) @map("is_active")
+  twoFactorEnabled   Boolean  @default(false) @map("two_factor_enabled")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  lastLogin          DateTime? @map("last_login")
+
+  // Relations
+  sentMessages       Message[] @relation("SentMessages")
+  receivedMessages   MessageRecipient[]
+  readMessages       MessageRead[]
+  createdGroups      UserGroup[] @relation("GroupCreator")
+  groupMemberships   UserGroupMember[]
+  sessions          Session[]
+  auditLogs         AuditLog[]
+
+  @@map("users")
+}
+
+model Message {
+  id                 Int      @id @default(autoincrement())
+  senderId           Int      @map("sender_id")
+  contentEncrypted   String   @map("content_encrypted")
+  encryptionKeyId    String?  @map("encryption_key_id")
+  confidentialityLevel Int    @default(1) @map("confidentiality_level")
+  isUrgent           Boolean  @default(false) @map("is_urgent")
+  audioDuration      Int?     @map("audio_duration") // 秒単位
+  originalAudioUrl   String?  @map("original_audio_url")
+  createdAt          DateTime @default(now()) @map("created_at")
+  updatedAt          DateTime @updatedAt @map("updated_at")
+  expiresAt          DateTime? @map("expires_at")
+  metadata           Json?
+
+  // Relations
+  sender            User @relation("SentMessages", fields: [senderId], references: [id], onDelete: Cascade)
+  recipients        MessageRecipient[]
+  reads             MessageRead[]
+
+  @@map("messages")
+}
+
+model MessageRecipient {
+  id            Int           @id @default(autoincrement())
+  messageId     Int           @map("message_id")
+  recipientId   Int           @map("recipient_id")
+  recipientType RecipientType @default(USER) @map("recipient_type")
+  createdAt     DateTime      @default(now()) @map("created_at")
+
+  // Relations
+  message      Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  recipient    User    @relation(fields: [recipientId], references: [id], onDelete: Cascade)
+
+  @@map("message_recipients")
+}
+
+model MessageRead {
+  id        Int      @id @default(autoincrement())
+  messageId Int      @map("message_id")
+  userId    Int      @map("user_id")
+  readAt    DateTime @default(now()) @map("read_at")
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  message Message @relation(fields: [messageId], references: [id], onDelete: Cascade)
+  user    User    @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([messageId, userId])
+  @@map("message_reads")
+}
+
+model UserGroup {
+  id          Int      @id @default(autoincrement())
+  name        String
+  description String?
+  createdById Int      @map("created_by_id")
+  createdAt   DateTime @default(now()) @map("created_at")
+
+  // Relations
+  createdBy User              @relation("GroupCreator", fields: [createdById], references: [id], onDelete: Cascade)
+  members   UserGroupMember[]
+
+  @@map("user_groups")
+}
+
+model UserGroupMember {
+  id          Int       @id @default(autoincrement())
+  groupId     Int       @map("group_id")
+  userId      Int       @map("user_id")
+  roleInGroup GroupRole @default(MEMBER) @map("role_in_group")
+  joinedAt    DateTime  @default(now()) @map("joined_at")
+
+  // Relations
+  group UserGroup @relation(fields: [groupId], references: [id], onDelete: Cascade)
+  user  User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@unique([groupId, userId])
+  @@map("user_group_members")
+}
+
+model Session {
+  id           Int      @id @default(autoincrement())
+  userId       Int      @map("user_id")
+  tokenHash    String   @map("token_hash")
+  expiresAt    DateTime @map("expires_at")
+  createdAt    DateTime @default(now()) @map("created_at")
+  lastAccessed DateTime @default(now()) @map("last_accessed")
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@map("sessions")
+}
+
+model AuditLog {
+  id        Int      @id @default(autoincrement())
+  userId    Int?     @map("user_id")
+  action    String
+  resource  String
+  ipAddress String?  @map("ip_address")
+  userAgent String?  @map("user_agent")
+  details   Json?
+  createdAt DateTime @default(now()) @map("created_at")
+
+  // Relations
+  user User? @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+  @@map("audit_logs")
+}
+
+// Enums
+enum Role {
+  ADMIN
+  STAFF
+  USER
+}
+
+enum RecipientType {
+  USER
+  GROUP
+}
+
+enum GroupRole {
+  ADMIN
+  MEMBER
+}
