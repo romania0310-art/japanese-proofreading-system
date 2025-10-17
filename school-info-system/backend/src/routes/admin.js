@@ -2,7 +2,7 @@ const express = require('express');
 const { PrismaClient } = require('@prisma/client');
 const bcrypt = require('bcryptjs');
 const { requireAdmin, requireStaff } = require('../middleware/auth');
-const { auditLogger } = require('../middleware/auditLogger');
+const { logSecurityEvent } = require('../middleware/auditLogger');
 
 const router = express.Router();
 const prisma = new PrismaClient();
@@ -87,7 +87,10 @@ router.get('/users', requireStaff, async (req, res) => {
 
     const total = await prisma.user.count({ where });
 
-    await auditLogger(req.user.id, 'VIEW', 'USERS', req);
+    await logSecurityEvent(req.user.id, 'USERS_VIEW', {
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
+    });
 
     res.json({
       success: true,
@@ -176,9 +179,11 @@ router.post('/users', requireAdmin, async (req, res) => {
       }
     });
 
-    await auditLogger(req.user.id, 'CREATE', 'USER', req, {
+    await logSecurityEvent(req.user.id, 'USER_CREATE', {
       targetUserId: user.id,
-      username: user.username
+      username: user.username,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
     });
 
     res.status(201).json({
@@ -268,9 +273,11 @@ router.put('/users/:id', requireAdmin, async (req, res) => {
       }
     });
 
-    await auditLogger(req.user.id, 'UPDATE', 'USER', req, {
+    await logSecurityEvent(req.user.id, 'USER_UPDATE', {
       targetUserId: userId,
-      changes: updateData
+      changes: updateData,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
     });
 
     res.json({
@@ -305,8 +312,10 @@ router.delete('/users/:id', requireAdmin, async (req, res) => {
       where: { id: userId }
     });
 
-    await auditLogger(req.user.id, 'DELETE', 'USER', req, {
-      targetUserId: userId
+    await logSecurityEvent(req.user.id, 'USER_DELETE', {
+      targetUserId: userId,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
     });
 
     res.json({
@@ -349,7 +358,10 @@ router.get('/groups', requireStaff, async (req, res) => {
       orderBy: { createdAt: 'desc' }
     });
 
-    await auditLogger(req.user.id, 'VIEW', 'GROUPS', req);
+    await logSecurityEvent(req.user.id, 'GROUPS_VIEW', {
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
+    });
 
     res.json({
       success: true,
@@ -397,9 +409,11 @@ router.post('/groups', requireAdmin, async (req, res) => {
       }
     });
 
-    await auditLogger(req.user.id, 'CREATE', 'GROUP', req, {
+    await logSecurityEvent(req.user.id, 'GROUP_CREATE', {
       groupId: group.id,
-      groupName: group.name
+      groupName: group.name,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
     });
 
     res.status(201).json({
@@ -436,9 +450,11 @@ router.put('/groups/:id', requireAdmin, async (req, res) => {
       }
     });
 
-    await auditLogger(req.user.id, 'UPDATE', 'GROUP', req, {
+    await logSecurityEvent(req.user.id, 'GROUP_UPDATE', {
       groupId,
-      changes: { name, description }
+      changes: { name, description },
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
     });
 
     res.json({
@@ -465,8 +481,10 @@ router.delete('/groups/:id', requireAdmin, async (req, res) => {
       where: { id: groupId }
     });
 
-    await auditLogger(req.user.id, 'DELETE', 'GROUP', req, {
-      groupId
+    await logSecurityEvent(req.user.id, 'GROUP_DELETE', {
+      groupId,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
     });
 
     res.json({
@@ -536,7 +554,10 @@ router.get('/messages', requireStaff, async (req, res) => {
 
     const total = await prisma.message.count({ where });
 
-    await auditLogger(req.user.id, 'VIEW', 'MESSAGES', req);
+    await logSecurityEvent(req.user.id, 'MESSAGES_VIEW', {
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
+    });
 
     res.json({
       success: true,
@@ -571,8 +592,10 @@ router.delete('/messages/:id', requireAdmin, async (req, res) => {
       where: { id: messageId }
     });
 
-    await auditLogger(req.user.id, 'DELETE', 'MESSAGE', req, {
-      messageId
+    await logSecurityEvent(req.user.id, 'MESSAGE_DELETE', {
+      messageId,
+      ipAddress: req.ip,
+      userAgent: req.get('User-Agent')
     });
 
     res.json({
