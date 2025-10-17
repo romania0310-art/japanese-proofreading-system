@@ -342,6 +342,81 @@
             }
         }
         
+        /* 一括登録専用スタイル */
+        .batch-input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+        }
+        
+        .batch-input:focus {
+            outline: none;
+            border-color: #1976d2;
+            box-shadow: 0 0 3px rgba(25, 118, 210, 0.3);
+        }
+        
+        .batch-select {
+            width: 100%;
+            padding: 0.5rem;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9rem;
+            background: white;
+        }
+        
+        .batch-select:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+        
+        .remove-row-btn {
+            background: #dc004e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            padding: 0.25rem 0.5rem;
+            cursor: pointer;
+            font-size: 0.8rem;
+        }
+        
+        .remove-row-btn:hover {
+            background: #b8003e;
+        }
+        
+        #batchUserTable td {
+            padding: 0.5rem;
+            vertical-align: middle;
+        }
+        
+        .preview-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .preview-modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .preview-modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
         @media (max-width: 768px) {
             .header {
                 padding: 1rem;
@@ -363,6 +438,17 @@
             .table th,
             .table td {
                 padding: 0.5rem;
+            }
+            
+            .batch-input,
+            .batch-select {
+                font-size: 0.8rem;
+                padding: 0.4rem;
+            }
+            
+            #batchUserTable th {
+                font-size: 0.8rem;
+                padding: 0.4rem;
             }
         }
     </style>
@@ -440,13 +526,20 @@
         
         <!-- ユーザー管理 -->
         <div id="users" class="section">
-            <div class="card">
+            <!-- ユーザー一覧表示 -->
+            <div class="card" id="userListCard">
                 <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
                     <h2 class="card-title">ユーザー管理</h2>
-                    <button class="btn" onclick="openUserModal()">
-                        <span class="material-icons">add</span>
-                        新規ユーザー
-                    </button>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn" onclick="showBatchRegistration()">
+                            <span class="material-icons">group_add</span>
+                            一括登録
+                        </button>
+                        <button class="btn secondary" onclick="showUserList()">
+                            <span class="material-icons">list</span>
+                            一覧表示
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="search-bar">
@@ -469,6 +562,73 @@
                         </tr>
                     </tbody>
                 </table>
+            </div>
+            
+            <!-- 一括ユーザー登録画面 -->
+            <div class="card" id="batchRegistrationCard" style="display: none;">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="card-title">ユーザー一括登録</h2>
+                    <div style="display: flex; gap: 1rem;">
+                        <button class="btn secondary" onclick="showUserList()">
+                            <span class="material-icons">arrow_back</span>
+                            一覧に戻る
+                        </button>
+                    </div>
+                </div>
+                
+                <div style="margin-bottom: 1.5rem;">
+                    <p style="color: #666; margin-bottom: 1rem;">複数のユーザーを一度に登録できます。必要事項を入力して「登録実行」ボタンを押してください。</p>
+                    <div style="background: #e3f2fd; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;">
+                        <h4 style="color: #1976d2; margin-bottom: 0.5rem;">登録のポイント:</h4>
+                        <ul style="margin: 0; padding-left: 1.5rem; color: #1976d2;">
+                            <li><strong>氏名・部署</strong>は必須項目です</li>
+                            <li><strong>ログインID・パスワード</strong>は管理者・ICT担当のみ設定してください</li>
+                            <li>一般の職員は音声入力専用となり、管理画面にはアクセスできません</li>
+                            <li>空白行は自動的にスキップされます</li>
+                        </ul>
+                    </div>
+                    
+                    <div style="display: flex; gap: 1rem; margin-bottom: 1rem;">
+                        <button class="btn" onclick="addUserRow()">
+                            <span class="material-icons">add</span>
+                            行を追加
+                        </button>
+                        <button class="btn secondary" onclick="clearAllRows()">
+                            <span class="material-icons">clear_all</span>
+                            全てクリア
+                        </button>
+                    </div>
+                </div>
+                
+                <form id="batchUserForm">
+                    <div style="overflow-x: auto;">
+                        <table class="table" id="batchUserTable">
+                            <thead>
+                                <tr>
+                                    <th style="min-width: 150px;">氏名 *</th>
+                                    <th style="min-width: 120px;">部署 *</th>
+                                    <th style="min-width: 130px;">ログインID</th>
+                                    <th style="min-width: 130px;">パスワード</th>
+                                    <th style="width: 60px;">操作</th>
+                                </tr>
+                            </thead>
+                            <tbody id="batchUserTableBody">
+                                <!-- 初期行は JavaScript で追加 -->
+                            </tbody>
+                        </table>
+                    </div>
+                    
+                    <div style="margin-top: 2rem; display: flex; justify-content: flex-end; gap: 1rem;">
+                        <button type="button" class="btn secondary" onclick="previewBatchUsers()">
+                            <span class="material-icons">preview</span>
+                            プレビュー
+                        </button>
+                        <button type="submit" class="btn">
+                            <span class="material-icons">save</span>
+                            登録実行
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
         
@@ -579,43 +739,14 @@
         </div>
     </div>
     
-    <!-- ユーザー編集モーダル -->
-    <div id="userModal" class="modal">
-        <div class="modal-content">
-            <h3 class="modal-title" id="userModalTitle">新規ユーザー</h3>
-            <form id="userForm">
-                <div class="form-group">
-                    <label for="fullName">氏名 *</label>
-                    <input type="text" id="fullName" name="fullName" required placeholder="例: 田中 太郎">
-                </div>
-                <div class="form-group">
-                    <label for="department">部署 *</label>
-                    <select id="department" name="department" required>
-                        <option value="">部署を選択してください</option>
-                        <option value="管理部">管理部</option>
-                        <option value="児童支援">児童支援</option>
-                        <option value="保健室">保健室</option>
-                        <option value="ICT支援">ICT支援</option>
-                        <option value="国際教室">国際教室</option>
-                        <option value="一般">一般</option>
-                        <option value="その他">その他</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label for="username">ログインID</label>
-                    <input type="text" id="username" name="username" placeholder="管理者・ICT担当のみ（任意）">
-                    <small style="color: #666; font-size: 0.9rem;">※管理画面にアクセスする場合のみ設定してください</small>
-                </div>
-                <div class="form-group">
-                    <label for="password">パスワード</label>
-                    <input type="password" id="password" name="password" placeholder="ログインIDを設定した場合のみ">
-                    <small style="color: #666; font-size: 0.9rem;">※ログインIDを設定した場合は8文字以上で入力してください</small>
-                </div>
-                <div class="modal-actions">
-                    <button type="submit" class="btn">保存</button>
-                    <button type="button" class="btn secondary" onclick="closeUserModal()">キャンセル</button>
-                </div>
-            </form>
+    <!-- プレビューモーダル -->
+    <div id="previewModal" class="preview-modal">
+        <div class="preview-modal-content">
+            <h3 class="modal-title">登録内容プレビュー</h3>
+            <div id="previewContent"></div>
+            <div class="modal-actions">
+                <button type="button" class="btn secondary" onclick="closePreviewModal()">閉じる</button>
+            </div>
         </div>
     </div>
     
@@ -693,7 +824,7 @@
                     loadDashboard();
                     break;
                 case 'users':
-                    loadUsers();
+                    showUserList(); // 必ず一覧表示から開始
                     break;
                 case 'groups':
                     loadGroups();
@@ -900,29 +1031,161 @@
             // 設定値は既にHTMLにセット済み
         }
         
-        // ユーザーモーダル操作
-        function openUserModal(userId = null) {
-            currentEditingUserId = userId;
-            const modal = document.getElementById('userModal');
-            const title = document.getElementById('userModalTitle');
-            const form = document.getElementById('userForm');
-            
-            if (userId) {
-                title.textContent = 'ユーザー編集';
-                // 編集時の処理は editUser() 関数で実行済み
-            } else {
-                title.textContent = '新規ユーザー';
-                form.reset();
-            }
-            
-            modal.classList.add('show');
+        // 画面切り替え機能
+        function showBatchRegistration() {
+            document.getElementById('userListCard').style.display = 'none';
+            document.getElementById('batchRegistrationCard').style.display = 'block';
+            initializeBatchRegistration();
         }
         
-        function closeUserModal() {
-            document.getElementById('userModal').classList.remove('show');
+        function showUserList() {
+            document.getElementById('userListCard').style.display = 'block';
+            document.getElementById('batchRegistrationCard').style.display = 'none';
+            loadUsers(); // リストを更新
+        }
+        
+        // 一括登録の初期化
+        function initializeBatchRegistration() {
+            const tbody = document.getElementById('batchUserTableBody');
+            tbody.innerHTML = '';
+            // 初期的に5行追加
+            for (let i = 0; i < 5; i++) {
+                addUserRow();
+            }
+        }
+        
+        // ユーザー行を追加
+        function addUserRow() {
+            const tbody = document.getElementById('batchUserTableBody');
+            const rowCount = tbody.children.length;
+            
+            const row = document.createElement('tr');
+            row.innerHTML = `
+                <td>
+                    <input type="text" class="batch-input" name="fullName_${rowCount}" placeholder="例: 田中 太郎">
+                </td>
+                <td>
+                    <select class="batch-select" name="department_${rowCount}">
+                        <option value="">選択してください</option>
+                        <option value="管理部">管理部</option>
+                        <option value="児童支援">児童支援</option>
+                        <option value="保健室">保健室</option>
+                        <option value="ICT支援">ICT支援</option>
+                        <option value="国際教室">国際教室</option>
+                        <option value="一般">一般</option>
+                        <option value="その他">その他</option>
+                    </select>
+                </td>
+                <td>
+                    <input type="text" class="batch-input" name="username_${rowCount}" placeholder="任意">
+                </td>
+                <td>
+                    <input type="password" class="batch-input" name="password_${rowCount}" placeholder="8文字以上">
+                </td>
+                <td>
+                    <button type="button" class="remove-row-btn" onclick="removeUserRow(this)">削除</button>
+                </td>
+            `;
+            
+            tbody.appendChild(row);
+        }
+        
+        // ユーザー行を削除
+        function removeUserRow(button) {
+            const tbody = document.getElementById('batchUserTableBody');
+            if (tbody.children.length > 1) {
+                button.closest('tr').remove();
+            } else {
+                alert('最低1行は必要です');
+            }
+        }
+        
+        // 全行をクリア
+        function clearAllRows() {
+            if (confirm('全ての入力内容をクリアしますか？')) {
+                const tbody = document.getElementById('batchUserTableBody');
+                tbody.innerHTML = '';
+                addUserRow(); // 最低1行は残す
+            }
+        }
+        
+        // プレビュー表示
+        function previewBatchUsers() {
+            const users = collectBatchUserData();
+            const validUsers = users.filter(user => user.fullName && user.department);
+            
+            if (validUsers.length === 0) {
+                alert('登録するユーザーがありません。氏名と部署を入力してください。');
+                return;
+            }
+            
+            let previewHtml = `
+                <p style="margin-bottom: 1rem;">登録予定のユーザー: <strong>${validUsers.length}名</strong></p>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>氏名</th>
+                            <th>部署</th>
+                            <th>ログインID</th>
+                            <th>管理画面アクセス</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            `;
+            
+            validUsers.forEach(user => {
+                previewHtml += `
+                    <tr>
+                        <td>${user.fullName}</td>
+                        <td>${user.department}</td>
+                        <td>${user.username || '（音声入力専用）'}</td>
+                        <td>${user.username ? 'あり' : 'なし'}</td>
+                    </tr>
+                `;
+            });
+            
+            previewHtml += '</tbody></table>';
+            
+            document.getElementById('previewContent').innerHTML = previewHtml;
+            document.getElementById('previewModal').classList.add('show');
+        }
+        
+        // プレビューモーダルを閉じる
+        function closePreviewModal() {
+            document.getElementById('previewModal').classList.remove('show');
+        }
+        
+        // バッチユーザーデータを収集
+        function collectBatchUserData() {
+            const tbody = document.getElementById('batchUserTableBody');
+            const rows = tbody.children;
+            const users = [];
+            
+            for (let i = 0; i < rows.length; i++) {
+                const row = rows[i];
+                const fullName = row.querySelector(`input[name="fullName_${i}"]`).value.trim();
+                const department = row.querySelector(`select[name="department_${i}"]`).value;
+                const username = row.querySelector(`input[name="username_${i}"]`).value.trim();
+                const password = row.querySelector(`input[name="password_${i}"]`).value;
+                
+                // 空行はスキップ
+                if (!fullName && !department) continue;
+                
+                users.push({
+                    fullName,
+                    department,
+                    username: username || null,
+                    password: password || null
+                });
+            }
+            
+            return users;
         }
         
         async function editUser(userId) {
+            // 個別編集は一括登録画面で行う
+            showBatchRegistration();
+            
             try {
                 // ユーザー情報を取得（実際のAPIから取得する場合）
                 // const response = await fetch(`${API_BASE_URL}/api/admin/users/${userId}`, {
@@ -930,7 +1193,7 @@
                 // });
                 // const userData = await response.json();
                 
-                // サンプルデータで編集フォームに値をセット
+                // サンプルデータで編集用の行を追加
                 const sampleUsers = [
                     { id: 1, fullName: '管理者 太郎', department: '管理部', username: 'admin' },
                     { id: 2, fullName: '田中 太郎', department: '児童支援', username: 'teacher1' },
@@ -941,16 +1204,19 @@
                 
                 const user = sampleUsers.find(u => u.id === userId);
                 if (user) {
-                    openUserModal(userId);
-                    // フォームに既存値をセット
-                    document.getElementById('fullName').value = user.fullName;
-                    document.getElementById('department').value = user.department;
-                    document.getElementById('username').value = user.username;
-                    document.getElementById('password').value = ''; // パスワードは空にする
+                    // 一括登録画面に既存データを設定
+                    setTimeout(() => {
+                        const tbody = document.getElementById('batchUserTableBody');
+                        const firstRow = tbody.children[0];
+                        if (firstRow) {
+                            firstRow.querySelector('input[name="fullName_0"]').value = user.fullName;
+                            firstRow.querySelector('select[name="department_0"]').value = user.department;
+                            firstRow.querySelector('input[name="username_0"]').value = user.username || '';
+                        }
+                    }, 100);
                 }
             } catch (error) {
                 console.error('ユーザー情報取得エラー:', error);
-                openUserModal(userId);
             }
         }
         
@@ -993,82 +1259,127 @@
             }
         }
         
-        // フォーム送信処理
-        document.getElementById('userForm').addEventListener('submit', async function(e) {
+        // バッチユーザー登録フォーム送信処理
+        document.getElementById('batchUserForm').addEventListener('submit', async function(e) {
             e.preventDefault();
             
-            const formData = new FormData(e.target);
-            const userData = Object.fromEntries(formData.entries());
+            const users = collectBatchUserData();
+            const validUsers = [];
+            const errors = [];
             
-            // 必須項目の入力チェック（氏名と部署のみ）
-            if (!userData.fullName || !userData.department) {
-                alert('氏名と部署は必須項目です');
-                return;
-            }
-            
-            // ログインIDとパスワードの整合性チェック
-            if (userData.username && !userData.password) {
-                alert('ログインIDを設定した場合はパスワードも入力してください');
-                return;
-            }
-            
-            if (userData.password && !userData.username) {
-                alert('パスワードを設定した場合はログインIDも入力してください');
-                return;
-            }
-            
-            // パスワード長チェック（設定する場合のみ）
-            if (userData.password && userData.password.length < 8) {
-                alert('パスワードは8文字以上で入力してください');
-                return;
-            }
-            
-            // デフォルト値の設定
-            if (userData.username) {
-                userData.email = `${userData.username}@school.edu.jp`; // ログインIDがある場合のみ自動生成
-            } else {
-                // ログインIDがない場合は氏名から自動生成
-                const nameParts = userData.fullName.replace(/\s+/g, '').toLowerCase();
-                userData.username = `user_${Date.now()}`; // 一意なIDを生成
-                userData.email = `${userData.username}@school.edu.jp`;
-                userData.password = 'temp_password_' + Math.random().toString(36).slice(-8); // 一時パスワード
-            }
-            
-            userData.role = 'USER'; // デフォルトで一般ユーザー（音声入力のみ）
-            userData.isActive = true;
-            
-            try {
-                const url = currentEditingUserId 
-                    ? `${API_BASE_URL}/api/admin/users/${currentEditingUserId}`
-                    : `${API_BASE_URL}/api/admin/users`;
-                    
-                const method = currentEditingUserId ? 'PUT' : 'POST';
+            // バリデーション
+            users.forEach((user, index) => {
+                const rowNum = index + 1;
                 
-                const response = await fetch(url, {
-                    method: method,
-                    headers: {
-                        'Content-Type': 'application/json',
-                        'Authorization': `Bearer ${authToken}`
-                    },
-                    body: JSON.stringify(userData)
-                });
-                
-                const result = await response.json();
-                
-                if (response.ok) {
-                    let message = result.message || 'ユーザーを保存しました';
-                    if (!formData.get('username')) {
-                        message += '\n\n※このユーザーは音声入力専用です。管理画面へのアクセスはできません。';
-                    }
-                    alert(message);
-                    closeUserModal();
-                    loadUsers();
-                } else {
-                    throw new Error(result.message || '保存に失敗しました');
+                // 必須項目チェック
+                if (!user.fullName) {
+                    errors.push(`${rowNum}行目: 氏名が未入力です`);
+                    return;
                 }
-            } catch (error) {
-                alert('保存に失敗しました: ' + error.message);
-                console.error('ユーザー保存エラー:', error);
+                
+                if (!user.department) {
+                    errors.push(`${rowNum}行目: 部署が未選択です`);
+                    return;
+                }
+                
+                // ログインIDとパスワードの整合性チェック
+                if (user.username && !user.password) {
+                    errors.push(`${rowNum}行目: ログインIDを設定した場合はパスワードも入力してください`);
+                    return;
+                }
+                
+                if (user.password && !user.username) {
+                    errors.push(`${rowNum}行目: パスワードを設定した場合はログインIDも入力してください`);
+                    return;
+                }
+                
+                // パスワード長チェック
+                if (user.password && user.password.length < 8) {
+                    errors.push(`${rowNum}行目: パスワードは8文字以上で入力してください`);
+                    return;
+                }
+                
+                // バリデーション通過したユーザーを追加
+                const userData = {
+                    fullName: user.fullName,
+                    department: user.department,
+                    role: 'USER',
+                    isActive: true
+                };
+                
+                if (user.username) {
+                    userData.username = user.username;
+                    userData.password = user.password;
+                    userData.email = `${user.username}@school.edu.jp`;
+                } else {
+                    // ログインIDがない場合は自動生成
+                    const timestamp = Date.now();
+                    userData.username = `user_${timestamp}_${index}`;
+                    userData.email = `${userData.username}@school.edu.jp`;
+                    userData.password = 'temp_password_' + Math.random().toString(36).slice(-8);
+                }
+                
+                validUsers.push(userData);
+            });
+            
+            if (errors.length > 0) {
+                alert('入力エラーがあります:\n\n' + errors.join('\n'));
+                return;
+            }
+            
+            if (validUsers.length === 0) {
+                alert('登録するユーザーがありません');
+                return;
+            }
+            
+            if (!confirm(`${validUsers.length}名のユーザーを登録しますか？`)) {
+                return;
+            }
+            
+            // 登録処理実行
+            let successCount = 0;
+            let failCount = 0;
+            const failedUsers = [];
+            
+            for (let i = 0; i < validUsers.length; i++) {
+                try {
+                    const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
+                        method: 'POST',
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Authorization': `Bearer ${authToken}`
+                        },
+                        body: JSON.stringify(validUsers[i])
+                    });
+                    
+                    if (response.ok) {
+                        successCount++;
+                    } else {
+                        const result = await response.json();
+                        failCount++;
+                        failedUsers.push(`${validUsers[i].fullName}: ${result.message || 'エラー'}`);
+                    }
+                } catch (error) {
+                    failCount++;
+                    failedUsers.push(`${validUsers[i].fullName}: ${error.message}`);
+                    console.error('ユーザー登録エラー:', error);
+                }
+            }
+            
+            // 結果表示
+            let message = `登録完了\n成功: ${successCount}名`;
+            if (failCount > 0) {
+                message += `\n失敗: ${failCount}名`;
+                if (failedUsers.length > 0) {
+                    message += '\n\n失敗詳細:\n' + failedUsers.join('\n');
+                }
+            }
+            
+            alert(message);
+            
+            if (successCount > 0) {
+                // 成功した場合は一覧画面に戻る
+                showUserList();
             }
         });
         
@@ -1148,8 +1459,8 @@
         }
         
         // モーダル外クリックで閉じる
-        document.getElementById('userModal').addEventListener('click', function(e) {
-            if (e.target === this) closeUserModal();
+        document.getElementById('previewModal').addEventListener('click', function(e) {
+            if (e.target === this) closePreviewModal();
         });
         
         document.getElementById('groupModal').addEventListener('click', function(e) {
