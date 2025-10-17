@@ -602,12 +602,14 @@
                     </select>
                 </div>
                 <div class="form-group">
-                    <label for="username">ログインID *</label>
-                    <input type="text" id="username" name="username" required placeholder="例: tanaka">
+                    <label for="username">ログインID</label>
+                    <input type="text" id="username" name="username" placeholder="管理者・ICT担当のみ（任意）">
+                    <small style="color: #666; font-size: 0.9rem;">※管理画面にアクセスする場合のみ設定してください</small>
                 </div>
                 <div class="form-group">
-                    <label for="password">パスワード *</label>
-                    <input type="password" id="password" name="password" required placeholder="8文字以上">
+                    <label for="password">パスワード</label>
+                    <input type="password" id="password" name="password" placeholder="ログインIDを設定した場合のみ">
+                    <small style="color: #666; font-size: 0.9rem;">※ログインIDを設定した場合は8文字以上で入力してください</small>
                 </div>
                 <div class="modal-actions">
                     <button type="submit" class="btn">保存</button>
@@ -998,21 +1000,41 @@
             const formData = new FormData(e.target);
             const userData = Object.fromEntries(formData.entries());
             
-            // 必須項目の入力チェック
-            if (!userData.fullName || !userData.department || !userData.username || !userData.password) {
-                alert('すべての必須項目を入力してください');
+            // 必須項目の入力チェック（氏名と部署のみ）
+            if (!userData.fullName || !userData.department) {
+                alert('氏名と部署は必須項目です');
                 return;
             }
             
-            // パスワード長チェック
-            if (userData.password.length < 8) {
+            // ログインIDとパスワードの整合性チェック
+            if (userData.username && !userData.password) {
+                alert('ログインIDを設定した場合はパスワードも入力してください');
+                return;
+            }
+            
+            if (userData.password && !userData.username) {
+                alert('パスワードを設定した場合はログインIDも入力してください');
+                return;
+            }
+            
+            // パスワード長チェック（設定する場合のみ）
+            if (userData.password && userData.password.length < 8) {
                 alert('パスワードは8文字以上で入力してください');
                 return;
             }
             
             // デフォルト値の設定
-            userData.email = `${userData.username}@school.edu.jp`; // 自動生成
-            userData.role = 'STAFF'; // デフォルトで職員
+            if (userData.username) {
+                userData.email = `${userData.username}@school.edu.jp`; // ログインIDがある場合のみ自動生成
+            } else {
+                // ログインIDがない場合は氏名から自動生成
+                const nameParts = userData.fullName.replace(/\s+/g, '').toLowerCase();
+                userData.username = `user_${Date.now()}`; // 一意なIDを生成
+                userData.email = `${userData.username}@school.edu.jp`;
+                userData.password = 'temp_password_' + Math.random().toString(36).slice(-8); // 一時パスワード
+            }
+            
+            userData.role = 'USER'; // デフォルトで一般ユーザー（音声入力のみ）
             userData.isActive = true;
             
             try {
@@ -1034,7 +1056,11 @@
                 const result = await response.json();
                 
                 if (response.ok) {
-                    alert(result.message || 'ユーザーを保存しました');
+                    let message = result.message || 'ユーザーを保存しました';
+                    if (!formData.get('username')) {
+                        message += '\n\n※このユーザーは音声入力専用です。管理画面へのアクセスはできません。';
+                    }
+                    alert(message);
                     closeUserModal();
                     loadUsers();
                 } else {
