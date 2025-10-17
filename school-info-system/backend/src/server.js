@@ -32,7 +32,10 @@ const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379');
 // Initialize Socket.IO
 const io = new Server(server, {
   cors: {
-    origin: process.env.CORS_ORIGIN?.split(',') || ["http://localhost:3000"],
+    origin: process.env.CORS_ORIGIN?.split(',') || [
+      "http://localhost:3000",
+      "https://8080-ilykkzen15fa0ckzitfr8-583b4d74.sandbox.novita.ai"
+    ],
     methods: ["GET", "POST"]
   }
 });
@@ -58,7 +61,10 @@ app.use(helmet({
 
 // CORS configuration
 app.use(cors({
-  origin: process.env.CORS_ORIGIN?.split(',') || ["http://localhost:3000"],
+  origin: process.env.CORS_ORIGIN?.split(',') || [
+    "http://localhost:3000",
+    "https://8080-ilykkzen15fa0ckzitfr8-583b4d74.sandbox.novita.ai"
+  ],
   credentials: true,
   methods: ['GET', 'POST', 'PUT', 'DELETE', 'OPTIONS'],
   allowedHeaders: ['Content-Type', 'Authorization']
