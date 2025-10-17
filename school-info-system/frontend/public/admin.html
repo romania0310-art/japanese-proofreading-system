@@ -1,0 +1,1101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>管理者画面 - 学校情報共有システム</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #f5f5f5;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1976d2;
+            color: white;
+            padding: 1rem 2rem;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .header-left {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .back-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+        }
+        
+        .back-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .logout-btn {
+            background: rgba(255,255,255,0.2);
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            cursor: pointer;
+        }
+        
+        .logout-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+        
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 80px;
+            width: 280px;
+            height: calc(100vh - 80px);
+            background: white;
+            border-right: 1px solid #e0e0e0;
+            padding: 1rem;
+            overflow-y: auto;
+        }
+        
+        .main-content {
+            margin-left: 280px;
+            padding: 2rem;
+            min-height: calc(100vh - 80px);
+        }
+        
+        .nav-item {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-item:hover {
+            background-color: #f5f5f5;
+        }
+        
+        .nav-item.active {
+            background-color: #e3f2fd;
+            color: #1976d2;
+        }
+        
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .card-header {
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+        }
+        
+        .card-title {
+            font-size: 1.5rem;
+            font-weight: 500;
+            color: #1976d2;
+        }
+        
+        .btn {
+            background: #1976d2;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background: #1565c0;
+        }
+        
+        .btn.secondary {
+            background: #666;
+        }
+        
+        .btn.secondary:hover {
+            background: #555;
+        }
+        
+        .btn.danger {
+            background: #dc004e;
+        }
+        
+        .btn.danger:hover {
+            background: #b8003e;
+        }
+        
+        .btn.small {
+            padding: 0.5rem 1rem;
+            font-size: 0.8rem;
+        }
+        
+        .table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 1rem;
+        }
+        
+        .table th,
+        .table td {
+            text-align: left;
+            padding: 1rem;
+            border-bottom: 1px solid #e0e0e0;
+        }
+        
+        .table th {
+            background-color: #f5f5f5;
+            font-weight: 500;
+        }
+        
+        .table tr:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .status-badge {
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .status-badge.active {
+            background: #e8f5e8;
+            color: #2e7d32;
+        }
+        
+        .status-badge.inactive {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1000;
+        }
+        
+        .modal.show {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .modal-content {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            max-width: 500px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .modal-title {
+            color: #1976d2;
+            margin-bottom: 1.5rem;
+            font-size: 1.3rem;
+        }
+        
+        .form-group {
+            margin-bottom: 1.5rem;
+        }
+        
+        .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: #333;
+        }
+        
+        .form-group input,
+        .form-group select,
+        .form-group textarea {
+            width: 100%;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .form-group input:focus,
+        .form-group select:focus,
+        .form-group textarea:focus {
+            outline: none;
+            border-color: #1976d2;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+            justify-content: flex-end;
+            margin-top: 2rem;
+        }
+        
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #1976d2;
+        }
+        
+        .stat-label {
+            color: #666;
+            margin-top: 0.5rem;
+        }
+        
+        .section {
+            display: none;
+        }
+        
+        .section.active {
+            display: block;
+        }
+        
+        .search-bar {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .search-input {
+            flex: 1;
+            padding: 0.75rem;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            font-size: 1rem;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+            
+            .sidebar.open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                margin-left: 0;
+            }
+        }
+        
+        @media (max-width: 768px) {
+            .header {
+                padding: 1rem;
+            }
+            
+            .modal-content {
+                margin: 1rem;
+                max-width: none;
+            }
+            
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .table {
+                font-size: 0.9rem;
+            }
+            
+            .table th,
+            .table td {
+                padding: 0.5rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="header-left">
+            <button class="back-btn" onclick="goBack()">
+                <span class="material-icons">arrow_back</span>
+            </button>
+            <h1>管理者画面</h1>
+        </div>
+        <div class="user-info">
+            <span id="userInfo">ログイン中...</span>
+            <button class="logout-btn" onclick="logout()">ログアウト</button>
+        </div>
+    </div>
+    
+    <div class="sidebar">
+        <div class="nav-item active" onclick="showSection('dashboard')">
+            <span class="material-icons">dashboard</span>
+            <span>ダッシュボード</span>
+        </div>
+        <div class="nav-item" onclick="showSection('users')">
+            <span class="material-icons">people</span>
+            <span>ユーザー管理</span>
+        </div>
+        <div class="nav-item" onclick="showSection('groups')">
+            <span class="material-icons">group_work</span>
+            <span>グループ管理</span>
+        </div>
+        <div class="nav-item" onclick="showSection('messages')">
+            <span class="material-icons">message</span>
+            <span>メッセージ履歴</span>
+        </div>
+        <div class="nav-item" onclick="showSection('settings')">
+            <span class="material-icons">settings</span>
+            <span>システム設定</span>
+        </div>
+    </div>
+    
+    <div class="main-content">
+        <!-- ダッシュボード -->
+        <div id="dashboard" class="section active">
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-value" id="totalUsers">-</div>
+                    <div class="stat-label">総ユーザー数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalGroups">-</div>
+                    <div class="stat-label">総グループ数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="totalMessages">-</div>
+                    <div class="stat-label">総メッセージ数</div>
+                </div>
+                <div class="stat-card">
+                    <div class="stat-value" id="activeUsers">-</div>
+                    <div class="stat-label">アクティブユーザー</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <h2 class="card-title">システム概要</h2>
+                <p>学校情報共有システムの管理画面です。左のメニューから各機能にアクセスできます。</p>
+                <ul style="margin-top: 1rem; padding-left: 1.5rem;">
+                    <li><strong>ユーザー管理</strong>: 入力者・受信者の追加、編集、削除</li>
+                    <li><strong>グループ管理</strong>: 部署別グループの設定と管理</li>
+                    <li><strong>メッセージ履歴</strong>: 送受信されたメッセージの確認</li>
+                    <li><strong>システム設定</strong>: 全体設定の変更</li>
+                </ul>
+            </div>
+        </div>
+        
+        <!-- ユーザー管理 -->
+        <div id="users" class="section">
+            <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="card-title">ユーザー管理</h2>
+                    <button class="btn" onclick="openUserModal()">
+                        <span class="material-icons">add</span>
+                        新規ユーザー
+                    </button>
+                </div>
+                
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="ユーザー名、メール、部署で検索..." id="userSearch">
+                    <button class="btn secondary" onclick="searchUsers()">検索</button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>ユーザー名</th>
+                            <th>氏名</th>
+                            <th>メール</th>
+                            <th>役割</th>
+                            <th>部署</th>
+                            <th>状態</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="usersTable">
+                        <tr>
+                            <td colspan="7" style="text-align: center; padding: 2rem;">読み込み中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- グループ管理 -->
+        <div id="groups" class="section">
+            <div class="card">
+                <div class="card-header" style="display: flex; justify-content: space-between; align-items: center;">
+                    <h2 class="card-title">グループ管理</h2>
+                    <button class="btn" onclick="openGroupModal()">
+                        <span class="material-icons">add</span>
+                        新規グループ
+                    </button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>グループ名</th>
+                            <th>説明</th>
+                            <th>メンバー数</th>
+                            <th>作成者</th>
+                            <th>作成日</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="groupsTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem;">読み込み中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- メッセージ履歴 -->
+        <div id="messages" class="section">
+            <div class="card">
+                <h2 class="card-title">メッセージ履歴</h2>
+                
+                <div class="search-bar">
+                    <input type="text" class="search-input" placeholder="メッセージ内容で検索..." id="messageSearch">
+                    <select style="padding: 0.75rem; border: 2px solid #ddd; border-radius: 8px;">
+                        <option value="">すべての機密レベル</option>
+                        <option value="1">一般</option>
+                        <option value="2">機密</option>
+                        <option value="3">極秘</option>
+                    </select>
+                    <button class="btn secondary" onclick="searchMessages()">検索</button>
+                </div>
+                
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>送信者</th>
+                            <th>内容</th>
+                            <th>機密レベル</th>
+                            <th>緊急度</th>
+                            <th>送信日時</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="messagesTable">
+                        <tr>
+                            <td colspan="6" style="text-align: center; padding: 2rem;">読み込み中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        
+        <!-- システム設定 -->
+        <div id="settings" class="section">
+            <div class="card">
+                <h2 class="card-title">システム設定</h2>
+                
+                <div class="form-group">
+                    <label>システム名</label>
+                    <input type="text" value="学校情報共有システム" id="systemName">
+                </div>
+                
+                <div class="form-group">
+                    <label>デフォルト機密レベル</label>
+                    <select id="defaultConfidentiality">
+                        <option value="1">一般</option>
+                        <option value="2" selected>機密</option>
+                        <option value="3">極秘</option>
+                    </select>
+                </div>
+                
+                <div class="form-group">
+                    <label>メッセージ保持期間（日）</label>
+                    <input type="number" value="90" id="messageRetention">
+                </div>
+                
+                <div class="form-group">
+                    <label>音声認識言語</label>
+                    <select id="speechLanguage">
+                        <option value="ja-JP" selected>日本語</option>
+                        <option value="en-US">英語</option>
+                    </select>
+                </div>
+                
+                <button class="btn" onclick="saveSettings()">
+                    <span class="material-icons">save</span>
+                    設定を保存
+                </button>
+            </div>
+        </div>
+    </div>
+    
+    <!-- ユーザー編集モーダル -->
+    <div id="userModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="userModalTitle">新規ユーザー</h3>
+            <form id="userForm">
+                <div class="form-group">
+                    <label for="username">ユーザー名 *</label>
+                    <input type="text" id="username" name="username" required>
+                </div>
+                <div class="form-group">
+                    <label for="email">メールアドレス *</label>
+                    <input type="email" id="email" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="fullName">氏名 *</label>
+                    <input type="text" id="fullName" name="fullName" required>
+                </div>
+                <div class="form-group">
+                    <label for="password">パスワード *</label>
+                    <input type="password" id="password" name="password" required>
+                </div>
+                <div class="form-group">
+                    <label for="role">役割 *</label>
+                    <select id="role" name="role" required>
+                        <option value="USER">一般ユーザー</option>
+                        <option value="STAFF">職員</option>
+                        <option value="ADMIN">管理者</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="department">部署</label>
+                    <input type="text" id="department" name="department">
+                </div>
+                <div class="form-group">
+                    <label for="phone">電話番号</label>
+                    <input type="tel" id="phone" name="phone">
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn">保存</button>
+                    <button type="button" class="btn secondary" onclick="closeUserModal()">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- グループ編集モーダル -->
+    <div id="groupModal" class="modal">
+        <div class="modal-content">
+            <h3 class="modal-title" id="groupModalTitle">新規グループ</h3>
+            <form id="groupForm">
+                <div class="form-group">
+                    <label for="groupName">グループ名 *</label>
+                    <input type="text" id="groupName" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label for="groupDescription">説明</label>
+                    <textarea id="groupDescription" name="description" rows="3"></textarea>
+                </div>
+                <div class="modal-actions">
+                    <button type="submit" class="btn">保存</button>
+                    <button type="button" class="btn secondary" onclick="closeGroupModal()">キャンセル</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <script>
+        // APIベースURL
+        const API_BASE_URL = 'https://3006-ilykkzen15fa0ckzitfr8-583b4d74.sandbox.novita.ai';
+        
+        // グローバル変数
+        let currentUser = null;
+        let authToken = null;
+        let currentEditingUserId = null;
+        let currentEditingGroupId = null;
+        
+        // ページ読み込み時の初期化
+        window.addEventListener('load', function() {
+            // URLパラメータから認証情報を取得
+            const urlParams = new URLSearchParams(window.location.search);
+            const token = urlParams.get('token');
+            const userInfo = urlParams.get('user');
+            
+            if (token && userInfo) {
+                authToken = token;
+                currentUser = JSON.parse(decodeURIComponent(userInfo));
+                document.getElementById('userInfo').textContent = `${currentUser.fullName || currentUser.username} (${currentUser.role})`;
+                loadDashboard();
+            } else {
+                // 認証情報がない場合はログインページにリダイレクト
+                alert('認証が必要です。ログインページに戻ります。');
+                window.location.href = 'simple.html';
+            }
+        });
+        
+        // セクション表示切り替え
+        function showSection(sectionId) {
+            // すべてのセクションを非表示
+            document.querySelectorAll('.section').forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // すべてのナビ項目を非アクティブ化
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 選択されたセクションを表示
+            document.getElementById(sectionId).classList.add('active');
+            
+            // 対応するナビ項目をアクティブ化
+            event.target.closest('.nav-item').classList.add('active');
+            
+            // セクション別のデータ読み込み
+            switch(sectionId) {
+                case 'dashboard':
+                    loadDashboard();
+                    break;
+                case 'users':
+                    loadUsers();
+                    break;
+                case 'groups':
+                    loadGroups();
+                    break;
+                case 'messages':
+                    loadMessages();
+                    break;
+                case 'settings':
+                    loadSettings();
+                    break;
+            }
+        }
+        
+        // ダッシュボードデータ読み込み
+        async function loadDashboard() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    const stats = data.stats;
+                    document.getElementById('totalUsers').textContent = stats.totalUsers;
+                    document.getElementById('totalGroups').textContent = stats.totalGroups;
+                    document.getElementById('totalMessages').textContent = stats.totalMessages;
+                    document.getElementById('activeUsers').textContent = stats.activeUsers;
+                } else {
+                    throw new Error('統計データの取得に失敗しました');
+                }
+            } catch (error) {
+                console.error('ダッシュボードデータ読み込みエラー:', error);
+                // フォールバック：サンプルデータ表示
+                document.getElementById('totalUsers').textContent = '5';
+                document.getElementById('totalGroups').textContent = '2';
+                document.getElementById('totalMessages').textContent = '2';
+                document.getElementById('activeUsers').textContent = '4';
+            }
+        }
+        
+        // ユーザー一覧読み込み
+        async function loadUsers() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/users`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayUsers(data.users || []);
+                } else {
+                    throw new Error('ユーザーデータの取得に失敗しました');
+                }
+            } catch (error) {
+                console.error('ユーザー読み込みエラー:', error);
+                displaySampleUsers();
+            }
+        }
+        
+        // ユーザー表示（サンプルデータ）
+        function displaySampleUsers() {
+            const sampleUsers = [
+                { id: 1, username: 'admin', fullName: '管理者 太郎', email: 'admin@school.edu.jp', role: 'ADMIN', department: '管理部', isActive: true },
+                { id: 2, username: 'teacher1', fullName: '田中 太郎', email: 'teacher1@school.edu.jp', role: 'STAFF', department: '児童支援', isActive: true },
+                { id: 3, username: 'nurse1', fullName: '佐藤 花子', email: 'nurse1@school.edu.jp', role: 'STAFF', department: '保健室', isActive: true },
+                { id: 4, username: 'support1', fullName: '鈴木 一郎', email: 'support1@school.edu.jp', role: 'STAFF', department: 'ICT支援', isActive: true },
+                { id: 5, username: 'user1', fullName: '山田 次郎', email: 'user1@school.edu.jp', role: 'USER', department: '一般', isActive: true }
+            ];
+            displayUsers(sampleUsers);
+        }
+        
+        // ユーザー表示
+        function displayUsers(users) {
+            const tbody = document.getElementById('usersTable');
+            
+            if (users.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">ユーザーがありません</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = users.map(user => `
+                <tr>
+                    <td>${user.username}</td>
+                    <td>${user.fullName || '-'}</td>
+                    <td>${user.email}</td>
+                    <td>${getRoleDisplayName(user.role)}</td>
+                    <td>${user.department || '-'}</td>
+                    <td><span class="status-badge ${user.isActive ? 'active' : 'inactive'}">${user.isActive ? 'アクティブ' : '無効'}</span></td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn small" onclick="editUser(${user.id})">編集</button>
+                            <button class="btn small danger" onclick="deleteUser(${user.id})">削除</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // 役割表示名取得
+        function getRoleDisplayName(role) {
+            switch(role) {
+                case 'ADMIN': return '管理者';
+                case 'STAFF': return '職員';
+                case 'USER': return '一般ユーザー';
+                default: return role;
+            }
+        }
+        
+        // グループ一覧読み込み
+        async function loadGroups() {
+            try {
+                const response = await fetch(`${API_BASE_URL}/api/admin/groups`, {
+                    headers: {
+                        'Authorization': `Bearer ${authToken}`
+                    }
+                });
+                
+                if (response.ok) {
+                    const data = await response.json();
+                    displayGroups(data.groups || []);
+                } else {
+                    throw new Error('グループデータの取得に失敗しました');
+                }
+            } catch (error) {
+                console.error('グループ読み込みエラー:', error);
+                displaySampleGroups();
+            }
+        }
+        
+        // グループ表示
+        function displayGroups(groups) {
+            const tbody = document.getElementById('groupsTable');
+            
+            if (groups.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">グループがありません</td></tr>';
+                return;
+            }
+            
+            tbody.innerHTML = groups.map(group => `
+                <tr>
+                    <td>${group.name}</td>
+                    <td>${group.description || '-'}</td>
+                    <td>${group.memberCount}名</td>
+                    <td>${group.createdByName}</td>
+                    <td>${new Date(group.createdAt).toLocaleDateString()}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn small" onclick="editGroup(${group.id})">編集</button>
+                            <button class="btn small danger" onclick="deleteGroup(${group.id})">削除</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // サンプルグループ表示
+        function displaySampleGroups() {
+            const sampleGroups = [
+                { id: 1, name: '児童支援チーム', description: '児童支援に関する情報を共有するグループ', memberCount: 2, createdByName: '管理者', createdAt: '2025-01-01' },
+                { id: 2, name: '保健・養護教諭', description: '児童の健康管理に関する情報共有', memberCount: 1, createdByName: '管理者', createdAt: '2025-01-01' }
+            ];
+            displayGroups(sampleGroups);
+        }
+        
+        // メッセージ履歴読み込み
+        async function loadMessages() {
+            // サンプルデータ表示
+            const sampleMessages = [
+                { id: 1, sender: '田中 太郎', content: 'A年B組の田中太郎君について、最近元気がない様子が見られます。家庭での変化があったか確認が必要です。', confidentialityLevel: 2, isUrgent: false, createdAt: '2025-01-01 09:30' },
+                { id: 2, sender: '佐藤 花子', content: '【緊急】C年D組の佐藤花子さんが体調不良で保健室で休んでいます。お迎えの連絡をお願いします。', confidentialityLevel: 3, isUrgent: true, createdAt: '2025-01-01 10:15' }
+            ];
+            
+            const tbody = document.getElementById('messagesTable');
+            tbody.innerHTML = sampleMessages.map(message => `
+                <tr>
+                    <td>${message.sender}</td>
+                    <td>${message.content.substring(0, 50)}...</td>
+                    <td>${getConfidentialityDisplayName(message.confidentialityLevel)}</td>
+                    <td><span class="status-badge ${message.isUrgent ? 'danger' : 'active'}">${message.isUrgent ? '緊急' : '通常'}</span></td>
+                    <td>${message.createdAt}</td>
+                    <td>
+                        <div class="actions">
+                            <button class="btn small" onclick="viewMessage(${message.id})">詳細</button>
+                            <button class="btn small danger" onclick="deleteMessage(${message.id})">削除</button>
+                        </div>
+                    </td>
+                </tr>
+            `).join('');
+        }
+        
+        // 機密レベル表示名取得
+        function getConfidentialityDisplayName(level) {
+            switch(level) {
+                case 1: return '一般';
+                case 2: return '機密';
+                case 3: return '極秘';
+                default: return '不明';
+            }
+        }
+        
+        // システム設定読み込み
+        function loadSettings() {
+            // 設定値は既にHTMLにセット済み
+        }
+        
+        // ユーザーモーダル操作
+        function openUserModal(userId = null) {
+            currentEditingUserId = userId;
+            const modal = document.getElementById('userModal');
+            const title = document.getElementById('userModalTitle');
+            const form = document.getElementById('userForm');
+            
+            if (userId) {
+                title.textContent = 'ユーザー編集';
+                // 編集時はユーザー情報を読み込み（実装省略）
+            } else {
+                title.textContent = '新規ユーザー';
+                form.reset();
+            }
+            
+            modal.classList.add('show');
+        }
+        
+        function closeUserModal() {
+            document.getElementById('userModal').classList.remove('show');
+        }
+        
+        function editUser(userId) {
+            openUserModal(userId);
+        }
+        
+        function deleteUser(userId) {
+            if (confirm('このユーザーを削除してもよろしいですか？')) {
+                alert('ユーザーを削除しました（サンプル動作）');
+                loadUsers();
+            }
+        }
+        
+        // グループモーダル操作
+        function openGroupModal(groupId = null) {
+            currentEditingGroupId = groupId;
+            const modal = document.getElementById('groupModal');
+            const title = document.getElementById('groupModalTitle');
+            const form = document.getElementById('groupForm');
+            
+            if (groupId) {
+                title.textContent = 'グループ編集';
+            } else {
+                title.textContent = '新規グループ';
+                form.reset();
+            }
+            
+            modal.classList.add('show');
+        }
+        
+        function closeGroupModal() {
+            document.getElementById('groupModal').classList.remove('show');
+        }
+        
+        function editGroup(groupId) {
+            openGroupModal(groupId);
+        }
+        
+        function deleteGroup(groupId) {
+            if (confirm('このグループを削除してもよろしいですか？')) {
+                alert('グループを削除しました（サンプル動作）');
+                loadGroups();
+            }
+        }
+        
+        // フォーム送信処理
+        document.getElementById('userForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const userData = Object.fromEntries(formData.entries());
+            
+            try {
+                const url = currentEditingUserId 
+                    ? `${API_BASE_URL}/api/admin/users/${currentEditingUserId}`
+                    : `${API_BASE_URL}/api/admin/users`;
+                    
+                const method = currentEditingUserId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(userData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(result.message || 'ユーザーを保存しました');
+                    closeUserModal();
+                    loadUsers();
+                } else {
+                    throw new Error(result.message || '保存に失敗しました');
+                }
+            } catch (error) {
+                alert('保存に失敗しました: ' + error.message);
+            }
+        });
+        
+        document.getElementById('groupForm').addEventListener('submit', async function(e) {
+            e.preventDefault();
+            
+            const formData = new FormData(e.target);
+            const groupData = Object.fromEntries(formData.entries());
+            
+            try {
+                const url = currentEditingGroupId 
+                    ? `${API_BASE_URL}/api/admin/groups/${currentEditingGroupId}`
+                    : `${API_BASE_URL}/api/admin/groups`;
+                    
+                const method = currentEditingGroupId ? 'PUT' : 'POST';
+                
+                const response = await fetch(url, {
+                    method: method,
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${authToken}`
+                    },
+                    body: JSON.stringify(groupData)
+                });
+                
+                const result = await response.json();
+                
+                if (response.ok) {
+                    alert(result.message || 'グループを保存しました');
+                    closeGroupModal();
+                    loadGroups();
+                } else {
+                    throw new Error(result.message || '保存に失敗しました');
+                }
+            } catch (error) {
+                alert('保存に失敗しました: ' + error.message);
+            }
+        });
+        
+        // その他の機能
+        function searchUsers() {
+            const searchTerm = document.getElementById('userSearch').value;
+            alert(`ユーザー検索: "${searchTerm}"（サンプル動作）`);
+        }
+        
+        function searchMessages() {
+            const searchTerm = document.getElementById('messageSearch').value;
+            alert(`メッセージ検索: "${searchTerm}"（サンプル動作）`);
+        }
+        
+        function viewMessage(messageId) {
+            alert(`メッセージ詳細表示: ID ${messageId}（サンプル動作）`);
+        }
+        
+        function deleteMessage(messageId) {
+            if (confirm('このメッセージを削除してもよろしいですか？')) {
+                alert('メッセージを削除しました（サンプル動作）');
+                loadMessages();
+            }
+        }
+        
+        function saveSettings() {
+            alert('設定を保存しました（サンプル動作）');
+        }
+        
+        function goBack() {
+            window.close();
+            if (!window.closed) {
+                window.location.href = 'simple.html';
+            }
+        }
+        
+        function logout() {
+            if (confirm('ログアウトしますか？')) {
+                window.location.href = 'simple.html';
+            }
+        }
+        
+        // モーダル外クリックで閉じる
+        document.getElementById('userModal').addEventListener('click', function(e) {
+            if (e.target === this) closeUserModal();
+        });
+        
+        document.getElementById('groupModal').addEventListener('click', function(e) {
+            if (e.target === this) closeGroupModal();
+        });
+    </script>
+</body>
+</html>

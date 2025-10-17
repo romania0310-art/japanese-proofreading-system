@@ -389,7 +389,7 @@
     
     <script>
         // APIベースURL
-        const API_BASE_URL = 'https://3005-ilykkzen15fa0ckzitfr8-583b4d74.sandbox.novita.ai';
+        const API_BASE_URL = 'https://3006-ilykkzen15fa0ckzitfr8-583b4d74.sandbox.novita.ai';
         
         // DOM要素
         const voiceButton = document.getElementById('voiceButton');
@@ -570,59 +570,10 @@
         
         // 管理者ダッシュボード表示
         function showAdminDashboard(user, token) {
-            // 新しいタブで管理画面を開く（実際には別ページを作成可能）
-            const adminWindow = window.open('', '_blank');
-            adminWindow.document.write(`
-                <!DOCTYPE html>
-                <html lang="ja">
-                <head>
-                    <meta charset="UTF-8">
-                    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-                    <title>管理者画面 - 学校情報共有システム</title>
-                    <style>
-                        body { font-family: 'Roboto', sans-serif; padding: 2rem; background: #f5f5f5; }
-                        .header { background: #1976d2; color: white; padding: 1rem; border-radius: 8px; margin-bottom: 2rem; }
-                        .card { background: white; padding: 1.5rem; border-radius: 8px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
-                        .user-info { display: flex; align-items: center; gap: 1rem; }
-                        .btn { background: #1976d2; color: white; border: none; padding: 0.5rem 1rem; border-radius: 4px; cursor: pointer; }
-                        .btn:hover { background: #1565c0; }
-                    </style>
-                </head>
-                <body>
-                    <div class="header">
-                        <h1>管理者画面</h1>
-                        <div class="user-info">
-                            <span>ログイン中: ${user.fullName || user.username} (${user.role})</span>
-                            <button class="btn" onclick="window.close()">閉じる</button>
-                        </div>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>ユーザー管理</h3>
-                        <p>入力者や受信者の追加・変更・削除を行えます</p>
-                        <button class="btn" onclick="alert('ユーザー管理機能は開発中です')">ユーザー管理を開く</button>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>グループ管理</h3>
-                        <p>部署やチーム別のグループ設定を管理できます</p>
-                        <button class="btn" onclick="alert('グループ管理機能は開発中です')">グループ管理を開く</button>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>メッセージ履歴</h3>
-                        <p>送受信されたメッセージの履歴を確認できます</p>
-                        <button class="btn" onclick="alert('メッセージ履歴機能は開発中です')">履歴を表示</button>
-                    </div>
-                    
-                    <div class="card">
-                        <h3>システム設定</h3>
-                        <p>システム全体の設定を変更できます</p>
-                        <button class="btn" onclick="alert('システム設定機能は開発中です')">設定を開く</button>
-                    </div>
-                </body>
-                </html>
-            `);
+            // 管理者画面にリダイレクト
+            const userInfo = encodeURIComponent(JSON.stringify(user));
+            const adminUrl = `admin.html?token=${token}&user=${userInfo}`;
+            window.open(adminUrl, '_blank');
         }
         
         // イベントリスナー

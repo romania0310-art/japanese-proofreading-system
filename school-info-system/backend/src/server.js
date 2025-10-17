@@ -18,6 +18,7 @@ const authRoutes = require('./routes/auth');
 const messageRoutes = require('./routes/messages');
 const userRoutes = require('./routes/users');
 const speechRoutes = require('./routes/speech');
+const adminRoutes = require('./routes/admin');
 
 // Import services
 const socketService = require('./services/socketService');
@@ -101,6 +102,7 @@ app.use('/auth', authRoutes);
 app.use('/api/messages', authMiddleware, messageRoutes);
 app.use('/api/users', authMiddleware, userRoutes);
 app.use('/api/speech', authMiddleware, speechRoutes);
+app.use('/api/admin', authMiddleware, adminRoutes);
 
 // Socket.IO initialization
 socketService.initialize(io, redis);
