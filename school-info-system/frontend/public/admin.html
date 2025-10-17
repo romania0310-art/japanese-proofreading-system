@@ -891,11 +891,11 @@
         // ユーザー表示（サンプルデータ）
         function displaySampleUsers() {
             const sampleUsers = [
-                { id: 1, fullName: '管理者 太郎', department: '管理部', isActive: true },
-                { id: 2, fullName: '田中 太郎', department: '児童支援', isActive: true },
-                { id: 3, fullName: '佐藤 花子', department: '保健室', isActive: true },
-                { id: 4, fullName: '鈴木 一郎', department: 'ICT支援', isActive: true },
-                { id: 5, fullName: '山田 次郎', department: '一般', isActive: true }
+                { id: 1, fullName: '管理者 太郎', department: '管理職', isActive: true },
+                { id: 2, fullName: '田中 太郎', department: '1年1組', isActive: true },
+                { id: 3, fullName: '佐藤 花子', department: '養護教諭', isActive: true },
+                { id: 4, fullName: '鈴木 一郎', department: 'ICT支援員', isActive: true },
+                { id: 5, fullName: '山田 次郎', department: '事務', isActive: true }
             ];
             displayUsers(sampleUsers);
         }
@@ -1067,12 +1067,50 @@
                 <td>
                     <select class="batch-select" name="department_${rowCount}">
                         <option value="">選択してください</option>
-                        <option value="管理部">管理部</option>
-                        <option value="児童支援">児童支援</option>
-                        <option value="保健室">保健室</option>
-                        <option value="ICT支援">ICT支援</option>
+                        <option value="管理職">管理職</option>
+                        <option value="1年1組">1年1組</option>
+                        <option value="1年2組">1年2組</option>
+                        <option value="1年3組">1年3組</option>
+                        <option value="1年4組">1年4組</option>
+                        <option value="1年5組">1年5組</option>
+                        <option value="2年1組">2年1組</option>
+                        <option value="2年2組">2年2組</option>
+                        <option value="2年3組">2年3組</option>
+                        <option value="2年4組">2年4組</option>
+                        <option value="2年5組">2年5組</option>
+                        <option value="3年1組">3年1組</option>
+                        <option value="3年2組">3年2組</option>
+                        <option value="3年3組">3年3組</option>
+                        <option value="3年4組">3年4組</option>
+                        <option value="3年5組">3年5組</option>
+                        <option value="4年1組">4年1組</option>
+                        <option value="4年2組">4年2組</option>
+                        <option value="4年3組">4年3組</option>
+                        <option value="4年4組">4年4組</option>
+                        <option value="4年5組">4年5組</option>
+                        <option value="5年1組">5年1組</option>
+                        <option value="5年2組">5年2組</option>
+                        <option value="5年3組">5年3組</option>
+                        <option value="5年4組">5年4組</option>
+                        <option value="5年5組">5年5組</option>
+                        <option value="6年1組">6年1組</option>
+                        <option value="6年2組">6年2組</option>
+                        <option value="6年3組">6年3組</option>
+                        <option value="6年4組">6年4組</option>
+                        <option value="6年5組">6年5組</option>
+                        <option value="7組">7組</option>
+                        <option value="児童支援専任">児童支援専任</option>
+                        <option value="養護教諭">養護教諭</option>
+                        <option value="学校栄養士">学校栄養士</option>
                         <option value="国際教室">国際教室</option>
-                        <option value="一般">一般</option>
+                        <option value="チャレンジルーム">チャレンジルーム</option>
+                        <option value="音楽専科">音楽専科</option>
+                        <option value="図工専科">図工専科</option>
+                        <option value="ICT支援員">ICT支援員</option>
+                        <option value="理科支援員">理科支援員</option>
+                        <option value="学校司書">学校司書</option>
+                        <option value="事務">事務</option>
+                        <option value="技術員">技術員</option>
                         <option value="その他">その他</option>
                     </select>
                 </td>
@@ -1195,11 +1233,11 @@
                 
                 // サンプルデータで編集用の行を追加
                 const sampleUsers = [
-                    { id: 1, fullName: '管理者 太郎', department: '管理部', username: 'admin' },
-                    { id: 2, fullName: '田中 太郎', department: '児童支援', username: 'teacher1' },
-                    { id: 3, fullName: '佐藤 花子', department: '保健室', username: 'nurse1' },
-                    { id: 4, fullName: '鈴木 一郎', department: 'ICT支援', username: 'support1' },
-                    { id: 5, fullName: '山田 次郎', department: '一般', username: 'user1' }
+                    { id: 1, fullName: '管理者 太郎', department: '管理職', username: 'admin' },
+                    { id: 2, fullName: '田中 太郎', department: '1年1組', username: 'teacher1' },
+                    { id: 3, fullName: '佐藤 花子', department: '養護教諭', username: 'nurse1' },
+                    { id: 4, fullName: '鈴木 一郎', department: 'ICT支援員', username: 'support1' },
+                    { id: 5, fullName: '山田 次郎', department: '事務', username: 'user1' }
                 ];
                 
                 const user = sampleUsers.find(u => u.id === userId);
