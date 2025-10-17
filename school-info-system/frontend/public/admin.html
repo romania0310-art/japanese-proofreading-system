@@ -457,10 +457,7 @@
                 <table class="table">
                     <thead>
                         <tr>
-                            <th>ユーザー名</th>
                             <th>氏名</th>
-                            <th>メール</th>
-                            <th>役割</th>
                             <th>部署</th>
                             <th>状態</th>
                             <th>操作</th>
@@ -468,7 +465,7 @@
                     </thead>
                     <tbody id="usersTable">
                         <tr>
-                            <td colspan="7" style="text-align: center; padding: 2rem;">読み込み中...</td>
+                            <td colspan="4" style="text-align: center; padding: 2rem;">読み込み中...</td>
                         </tr>
                     </tbody>
                 </table>
@@ -768,11 +765,11 @@
         // ユーザー表示（サンプルデータ）
         function displaySampleUsers() {
             const sampleUsers = [
-                { id: 1, username: 'admin', fullName: '管理者 太郎', email: 'admin@school.edu.jp', role: 'ADMIN', department: '管理部', isActive: true },
-                { id: 2, username: 'teacher1', fullName: '田中 太郎', email: 'teacher1@school.edu.jp', role: 'STAFF', department: '児童支援', isActive: true },
-                { id: 3, username: 'nurse1', fullName: '佐藤 花子', email: 'nurse1@school.edu.jp', role: 'STAFF', department: '保健室', isActive: true },
-                { id: 4, username: 'support1', fullName: '鈴木 一郎', email: 'support1@school.edu.jp', role: 'STAFF', department: 'ICT支援', isActive: true },
-                { id: 5, username: 'user1', fullName: '山田 次郎', email: 'user1@school.edu.jp', role: 'USER', department: '一般', isActive: true }
+                { id: 1, fullName: '管理者 太郎', department: '管理部', isActive: true },
+                { id: 2, fullName: '田中 太郎', department: '児童支援', isActive: true },
+                { id: 3, fullName: '佐藤 花子', department: '保健室', isActive: true },
+                { id: 4, fullName: '鈴木 一郎', department: 'ICT支援', isActive: true },
+                { id: 5, fullName: '山田 次郎', department: '一般', isActive: true }
             ];
             displayUsers(sampleUsers);
         }
@@ -782,16 +779,13 @@
             const tbody = document.getElementById('usersTable');
             
             if (users.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 2rem;">ユーザーがありません</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">ユーザーがありません</td></tr>';
                 return;
             }
             
             tbody.innerHTML = users.map(user => `
                 <tr>
-                    <td>${user.username}</td>
                     <td>${user.fullName || '-'}</td>
-                    <td>${user.email}</td>
-                    <td>${getRoleDisplayName(user.role)}</td>
                     <td>${user.department || '-'}</td>
                     <td><span class="status-badge ${user.isActive ? 'active' : 'inactive'}">${user.isActive ? 'アクティブ' : '無効'}</span></td>
                     <td>
